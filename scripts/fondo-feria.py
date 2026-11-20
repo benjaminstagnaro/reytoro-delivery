@@ -11,10 +11,6 @@ d = ImageDraw.Draw(c)
 for y in range(H):
     t = y / H
     d.line([(0, y), (W, y)], fill=(int(70 + 40 * t), int(52 + 25 * t), int(36 + 10 * t)))
-# luces colgantes (se vuelven bokeh)
-for i in range(14):
-    x = random.randint(0, W); y = random.randint(40, 260); r = random.randint(14, 30)
-    d.ellipse([x - r, y - r, x + r, y + r], fill=(255, 226, 160))
 # toldo a rayas verde y crema con borde ondulado
 top = 0; alto = 300; ancho = 120
 for i, x in enumerate(range(-ancho, W + ancho, ancho)):
@@ -42,13 +38,10 @@ for (y, n, w, h) in niveles:
     for i in range(n + 1):
         x = int(i * paso - paso * 0.35 + random.randint(-40, 40))
         cajon(orden[i % len(orden)], x, y + random.randint(-25, 25), w + random.randint(-30, 30), h)
-for i in range(40):  # brillos de luz sobre la fruta
-    x = random.randint(0, W); y = random.randint(320, H); r = random.randint(10, 26)
-    d.ellipse([x - r, y - r, x + r, y + r], fill=(255, 240, 205))
-c = c.filter(ImageFilter.GaussianBlur(34))
+c = c.filter(ImageFilter.GaussianBlur(int(os.environ.get("BLUR", 12))))
 c = ImageEnhance.Color(c).enhance(1.12)
 c = ImageEnhance.Brightness(c).enhance(0.92)
-c = c.resize((1600, 900), Image.LANCZOS)
+c = c.resize((1920, 1080), Image.LANCZOS)
 out = os.path.join(os.path.dirname(__file__), '..', 'public', 'fondo', 'feria-desenfocada.webp')
 c.save(out, 'WEBP', quality=72, method=6)
 print(os.path.getsize(out) // 1024, 'KB')
