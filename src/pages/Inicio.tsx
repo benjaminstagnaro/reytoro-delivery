@@ -1,18 +1,20 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { FilaProducto } from '../components/FilaProducto';
-import { Ilustracion, colorCategoria, ilustracionCategoria, type NombreIlustracion } from '../components/Ilustracion';
+import { Ilustracion, colorCategoria, ilustracionCategoria } from '../components/Ilustracion';
+import { rutas } from '../lib/fotosProductos';
 import { useCatalogo } from '../state/catalogo';
 import { useTitulo } from '../lib/useTitulo';
 import { clp } from '../lib/format';
 import { casaPlaya } from '../content/arriendos';
 import { Foto } from '../components/Foto';
 
-const BURBUJAS: { nombre: NombreIlustracion; color: string; clase: string; retraso: number }[] = [
-  { nombre: 'naranja', color: '#ffcf8a', clase: 'left-[4%] top-[2%] w-[48%]', retraso: 0 },
-  { nombre: 'frutilla', color: '#ff9c8a', clase: 'left-[52%] top-0 w-[40%]', retraso: 120 },
-  { nombre: 'palta', color: '#bfe39a', clase: 'left-[40%] top-[42%] w-[54%]', retraso: 240 },
-  { nombre: 'limon', color: '#fff1a6', clase: 'left-0 top-[52%] w-[38%]', retraso: 360 },
+// Fotos de la portada, en círculos con el color de cada fruta como borde.
+const BURBUJAS: { archivo: string; color: string; clase: string; retraso: number }[] = [
+  { archivo: 'naranjas', color: '#ffcf8a', clase: 'left-[4%] top-[2%] w-[48%]', retraso: 0 },
+  { archivo: 'frutillas', color: '#ff9c8a', clase: 'left-[52%] top-0 w-[40%]', retraso: 120 },
+  { archivo: 'paltas', color: '#bfe39a', clase: 'left-[40%] top-[42%] w-[54%]', retraso: 240 },
+  { archivo: 'limones', color: '#fff1a6', clase: 'left-0 top-[52%] w-[38%]', retraso: 360 },
 ];
 
 const PASOS = [
@@ -45,7 +47,9 @@ export function Inicio() {
         <div className="panel relative overflow-hidden bg-menta">
           <div className="contenedor grid grid-cols-1 items-center gap-8 py-12 md:grid-cols-[1.15fr_1fr] md:py-20">
             <div>
-              <h1 className="titulo text-[clamp(2.3rem,11vw,2.9rem)] sm:text-[4rem] lg:text-[5.2rem]">Fruta y verdura fresca, a tu puerta.</h1>
+              <h1 className="titulo text-[clamp(2.3rem,11vw,2.9rem)] sm:text-[4rem] lg:text-[5.2rem]">
+                Fruta y verdura fresca, a tu puerta.
+              </h1>
               <p className="mt-6 max-w-xl text-[1.25rem] text-hoja-suave">
                 Elegida cada madrugada en La Vega. Pides en minutos desde el celular y pagas al recibir.
               </p>
@@ -87,11 +91,18 @@ export function Inicio() {
             <div className="relative mx-auto aspect-square w-full max-w-[30rem]" aria-hidden="true">
               {BURBUJAS.map((b) => (
                 <div
-                  key={b.nombre}
-                  className={`burbuja absolute grid aspect-square place-items-center rounded-full ${b.clase}`}
+                  key={b.archivo}
+                  className={`burbuja absolute aspect-square rounded-full p-[5%] ${b.clase}`}
                   style={{ background: b.color, animationDelay: `${b.retraso}ms` }}
                 >
-                  <Ilustracion nombre={b.nombre} className="h-[60%] w-[60%]" />
+                  <img
+                    src={rutas(b.archivo).grande}
+                    alt=""
+                    width={640}
+                    height={640}
+                    fetchPriority={b.retraso === 0 ? 'high' : undefined}
+                    className="h-full w-full rounded-full object-cover"
+                  />
                 </div>
               ))}
             </div>

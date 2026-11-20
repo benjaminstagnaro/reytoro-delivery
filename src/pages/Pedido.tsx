@@ -138,7 +138,7 @@ function ListaPrecios({ catalogo }: { catalogo: Catalogo }) {
           const de = visibles.filter((p) => p.c === c);
           if (!de.length) return null;
           return (
-            <section key={c} id={idSeccion(c)} className="scroll-mt-[9rem] pt-10" aria-labelledby={`${idSeccion(c)}-t`}>
+            <section key={c} id={idSeccion(c)} className="pt-10" aria-labelledby={`${idSeccion(c)}-t`}>
               <h2 id={`${idSeccion(c)}-t`} className="flex flex-wrap items-center gap-x-3 gap-y-1">
                 <span className="grid size-14 place-items-center rounded-2xl" style={{ background: colorCategoria(c) }} aria-hidden="true">
                   <Ilustracion nombre={ilustracionCategoria(c)} className="size-9" />
@@ -154,6 +154,7 @@ function ListaPrecios({ catalogo }: { catalogo: Catalogo }) {
             </section>
           );
         })}
+        <p className="mt-12 text-center text-hoja-suave">Las fotos son referenciales: la fruta y la verdura se eligen frescas cada día.</p>
       </div>
 
       {resumen && <BarraPedido resumen={resumen} minimo={config.minimo} />}

@@ -2,7 +2,8 @@ import { useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ConCatalogo } from '../components/Estado';
 import { Contador } from '../components/Contador';
-import { Ilustracion, colorCategoria, ilustracionProducto } from '../components/Ilustracion';
+import { Ilustracion } from '../components/Ilustracion';
+import { ImagenProducto } from '../components/ImagenProducto';
 import { useCarrito } from '../state/carrito';
 import { useTitulo } from '../lib/useTitulo';
 import { claveProducto, clp, medidaLinda, nombreLindo } from '../lib/format';
@@ -99,13 +100,7 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
             const nombre = nombreLindo(p.n);
             return (
               <li key={k} className="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-3xl border-2 border-linea bg-papel p-3">
-                <span
-                  className="grid size-14 shrink-0 place-items-center rounded-2xl"
-                  style={{ background: colorCategoria(p.c) }}
-                  aria-hidden="true"
-                >
-                  <Ilustracion nombre={ilustracionProducto(p)} className="size-9" />
-                </span>
+                <ImagenProducto producto={p} className="size-14 shrink-0" />
                 <div className="min-w-[9rem] flex-1">
                   <p className="text-[1.1rem] font-bold">{nombre}</p>
                   <p className="text-hoja-suave">

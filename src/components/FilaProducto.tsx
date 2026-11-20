@@ -2,9 +2,9 @@ import type { Producto } from '../lib/types';
 import { claveProducto, clp, medidaLinda, nombreLindo, nombreSinOferta } from '../lib/format';
 import { useCarrito } from '../state/carrito';
 import { Contador } from './Contador';
-import { Ilustracion, colorCategoria, ilustracionProducto } from './Ilustracion';
+import { ImagenProducto } from './ImagenProducto';
 
-/** Tarjeta de un producto: dibujo en su color de categoría, nombre, precio y botones para agregar. */
+/** Tarjeta de un producto: foto (o dibujo en su color de categoría), nombre, precio y botones para agregar. */
 export function FilaProducto({ producto }: { producto: Producto }) {
   const { cantidad, cambiar } = useCarrito();
   const clave = claveProducto(producto);
@@ -19,12 +19,7 @@ export function FilaProducto({ producto }: { producto: Producto }) {
         q > 0 ? 'border-hoja' : 'border-linea'
       }`}
     >
-      <div
-        className="relative row-span-2 grid aspect-square place-items-center self-start rounded-2xl sm:row-span-1 sm:self-center"
-        style={{ background: colorCategoria(producto.c) }}
-      >
-        <Ilustracion nombre={ilustracionProducto(producto)} className="h-[62%] w-[62%]" />
-      </div>
+      <ImagenProducto producto={producto} className="row-span-2 self-start sm:row-span-1 sm:self-center" />
       <div className="min-w-0">
         {(oferta || destacado) && (
           <span className={`mb-1 inline-block rounded-full px-2.5 py-0.5 text-sm font-bold ${oferta ? 'bg-oferta' : 'bg-menta'}`}>
