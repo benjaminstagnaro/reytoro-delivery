@@ -35,7 +35,8 @@ export default function App() {
             >
               Saltar al contenido
             </a>
-            <div className="flex min-h-dvh flex-col">
+            <div className="fondo-feria" aria-hidden="true" />
+            <div className="hoja-pagina flex min-h-dvh flex-col">
               <Encabezado />
               <AvisoBarra />
               <main id="contenido" className="flex-1">

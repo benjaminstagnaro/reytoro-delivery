@@ -58,6 +58,31 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/*
+ * Pantallas anchas: la página va al centro como una hoja blanca y a los lados
+ * se ve un puesto de feria desenfocado, en vez de un borde blanco sin uso.
+ * En pantallas más angostas la imagen ni siquiera se descarga.
+ */
+.fondo-feria {
+  display: none;
+}
+@media (min-width: 1500px) {
+  .fondo-feria {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: #5c4028 url('/fondo/feria-desenfocada.webp') center / cover no-repeat;
+  }
+  .hoja-pagina {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    background: var(--color-papel);
+    box-shadow: 0 0 80px rgb(22 48 31 / 0.45);
+  }
+}
+
 :focus-visible {
   outline: 3px solid var(--color-hoja);
   outline-offset: 3px;
