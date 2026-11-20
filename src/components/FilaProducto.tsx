@@ -1,10 +1,10 @@
 import type { Producto } from '../lib/types';
-import { claveProducto, nombreLindo, nombreSinOferta } from '../lib/format';
+import { claveProducto, clp, medidaLinda, nombreLindo, nombreSinOferta } from '../lib/format';
 import { useCarrito } from '../state/carrito';
-import { Cartel } from './Cartel';
 import { Contador } from './Contador';
+import { Ilustracion, colorCategoria, ilustracionProducto } from './Ilustracion';
 
-/** Un producto de la lista: nombre, cartel de precio y botones para agregar. */
+/** Tarjeta de un producto: dibujo en su color de categoría, nombre, precio y botones para agregar. */
 export function FilaProducto({ producto }: { producto: Producto }) {
   const { cantidad, cambiar } = useCarrito();
   const clave = claveProducto(producto);
@@ -14,22 +14,28 @@ export function FilaProducto({ producto }: { producto: Producto }) {
   const nombre = nombreLindo(oferta ? nombreSinOferta(producto.n) : producto.n);
 
   return (
-    // Celular: precio a la izquierda, nombre arriba y botón abajo. Pantallas anchas: todo en una línea.
     <li
-      className={`grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-2 rounded-xl border-2 p-3 transition-colors sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-x-4 sm:p-4 ${
-        q > 0 ? 'border-naranjo bg-[#fff6ef]' : 'border-linea bg-papel'
+      className={`grid min-w-0 grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-3 rounded-3xl border-2 bg-papel p-3 transition-colors sm:grid-cols-[5rem_minmax(0,1fr)_auto] ${
+        q > 0 ? 'border-hoja' : 'border-linea'
       }`}
     >
-      <Cartel
-        precio={producto.p}
-        medida={producto.m}
-        oferta={oferta}
-        tamano="sm"
-        className="row-span-2 min-w-[5.6rem] self-start sm:row-span-1 sm:self-center"
-      />
+      <div
+        className="relative row-span-2 grid aspect-square place-items-center self-start rounded-2xl sm:row-span-1 sm:self-center"
+        style={{ background: colorCategoria(producto.c) }}
+      >
+        <Ilustracion nombre={ilustracionProducto(producto)} className="h-[62%] w-[62%]" />
+      </div>
       <div className="min-w-0">
-        <p className="text-[1.08rem] leading-snug font-bold break-words">{nombre}</p>
-        {destacado && <p className="mt-0.5 text-sm font-bold text-hoja">Recomendado de la semana</p>}
+        {(oferta || destacado) && (
+          <span className={`mb-1 inline-block rounded-full px-2.5 py-0.5 text-sm font-bold ${oferta ? 'bg-oferta' : 'bg-menta'}`}>
+            {oferta ? 'Oferta' : 'Recomendado'}
+          </span>
+        )}
+        <p className="text-[1.1rem] leading-snug font-bold break-words">{nombre}</p>
+        <p className="mt-0.5">
+          <span className="titulo-sm text-[1.35rem]">{clp(producto.p)}</span>{' '}
+          <span className="text-hoja-suave">{medidaLinda(producto.m)}</span>
+        </p>
       </div>
       <div className="justify-self-end sm:col-start-3 sm:row-start-1">
         <Contador cantidad={q} nombre={nombre} onCambiar={(d) => cambiar(clave, d)} />

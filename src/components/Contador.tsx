@@ -11,19 +11,22 @@ export function Contador({ cantidad, nombre, onCambiar }: Props) {
       <button
         type="button"
         onClick={() => onCambiar(1)}
-        className="boton boton-principal min-h-12 shrink-0 px-5 text-base"
+        className="boton boton-oscuro min-h-12 shrink-0 px-5 text-base"
         aria-label={`Agregar ${nombre}`}
       >
-        <span aria-hidden="true" className="text-xl leading-none">+</span> Agregar
+        <span aria-hidden="true" className="text-xl leading-none">
+          +
+        </span>{' '}
+        Agregar
       </button>
     );
   }
   return (
-    <div className="flex shrink-0 items-center gap-1 rounded-full bg-tinta p-1 text-papel" role="group" aria-label={`Cantidad de ${nombre}`}>
+    <div className="flex shrink-0 items-center gap-1 rounded-full bg-menta p-1" role="group" aria-label={`Cantidad de ${nombre}`}>
       <button
         type="button"
         onClick={() => onCambiar(-1)}
-        className="grid size-11 place-items-center rounded-full text-2xl leading-none hover:bg-white/15"
+        className="grid size-11 place-items-center rounded-full bg-papel text-2xl leading-none hover:bg-menta-fuerte"
         aria-label={cantidad === 1 ? `Quitar ${nombre}` : `Uno menos de ${nombre}`}
       >
         −
@@ -34,7 +37,7 @@ export function Contador({ cantidad, nombre, onCambiar }: Props) {
       <button
         type="button"
         onClick={() => onCambiar(1)}
-        className="grid size-11 place-items-center rounded-full bg-naranjo text-2xl leading-none text-tinta hover:bg-naranjo-claro"
+        className="grid size-11 place-items-center rounded-full bg-hoja text-2xl leading-none text-papel hover:bg-[#234a31]"
         aria-label={`Uno más de ${nombre}`}
       >
         +

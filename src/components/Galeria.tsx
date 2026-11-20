@@ -26,13 +26,13 @@ export function Galeria({ fotos }: { fotos: FotoArriendo[] }) {
         key={f.src + f.alt}
         type="button"
         onClick={() => abrir(f)}
-        className={`group relative overflow-hidden rounded-2xl ${clase}`}
+        className={`group relative overflow-hidden rounded-3xl ${clase}`}
         aria-label={`Ver en grande: ${f.alt}`}
       >
         <Foto foto={f} prioridad={prioridad} sizes={sizes} className="transition-transform duration-300 group-hover:scale-[1.03]" />
       </button>
     ) : (
-      <div key={f.alt} className={`overflow-hidden rounded-2xl ${clase}`}>
+      <div key={f.alt} className={`overflow-hidden rounded-3xl ${clase}`}>
         <Foto foto={f} />
       </div>
     );
@@ -50,22 +50,18 @@ export function Galeria({ fotos }: { fotos: FotoArriendo[] }) {
             <button
               type="button"
               onClick={() => abrir(ocultas[0])}
-              className="relative aspect-[4/3] overflow-hidden rounded-2xl"
+              className="relative aspect-[4/3] overflow-hidden rounded-3xl"
               aria-label={`Ver ${ocultas.length} fotos más`}
             >
               <Foto foto={ocultas[0]} sizes="(min-width: 768px) 25vw, 50vw" />
-              <span className="absolute inset-0 grid place-items-center bg-tinta/65 text-papel">
-                <span className="letrero text-[2rem]">+{ocultas.length}</span>
+              <span className="absolute inset-0 grid place-items-center bg-hoja/65 text-papel">
+                <span className="titulo text-[2rem]">+{ocultas.length}</span>
               </span>
             </button>
           )}
         </div>
       )}
-      {reales.length > 0 && (
-        <p className="mt-3 text-gris">
-          {reales.length} fotos. Toca una para verla en grande.
-        </p>
-      )}
+      {reales.length > 0 && <p className="mt-3 text-hoja-suave">{reales.length} fotos. Toca una para verla en grande.</p>}
       {abierta !== null && <Visor fotos={reales} inicio={abierta} onCerrar={() => setAbierta(null)} />}
     </>
   );
@@ -96,7 +92,7 @@ function Visor({ fotos, inicio, onCerrar }: { fotos: FotoArriendo[]; inicio: num
       ref={dialogo}
       onClose={onCerrar}
       onCancel={onCerrar}
-      className="m-0 h-dvh max-h-none w-screen max-w-none bg-tinta p-0 text-papel backdrop:bg-black/80"
+      className="m-0 h-dvh max-h-none w-screen max-w-none bg-hoja p-0 text-papel backdrop:bg-black/80"
       aria-label="Fotos en pantalla completa"
       onTouchStart={(e) => (toque.current = e.touches[0].clientX)}
       onTouchEnd={(e) => {
@@ -109,7 +105,10 @@ function Visor({ fotos, inicio, onCerrar }: { fotos: FotoArriendo[]; inicio: num
       <div className="flex h-full flex-col">
         <div className="flex items-center justify-between gap-3 p-3">
           <p className="font-bold" aria-live="polite">
-            {f.alt} <span className="font-normal text-white/70">({i + 1} de {n})</span>
+            {f.alt}{' '}
+            <span className="font-normal text-white/70">
+              ({i + 1} de {n})
+            </span>
           </p>
           <button type="button" onClick={() => dialogo.current?.close()} className="boton boton-principal min-h-12 px-5" autoFocus>
             Cerrar

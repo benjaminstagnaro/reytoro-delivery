@@ -37,13 +37,17 @@ export function Foto({
     );
   }
   return (
-    <div className={`toldo grid h-full w-full place-items-center p-4 text-center ${className}`} role="img" aria-label={`${foto.alt} (foto pendiente)`}>
+    <div
+      className={`foto-pendiente grid h-full w-full place-items-center p-4 text-center ${className}`}
+      role="img"
+      aria-label={`${foto.alt} (foto pendiente)`}
+    >
       <div>
         <span className="text-4xl" aria-hidden="true">
           📷
         </span>
-        <p className="mt-2 font-bold text-gris">{foto.alt}</p>
-        <p className="text-sm text-gris">Foto pendiente</p>
+        <p className="mt-2 font-bold text-hoja-suave">{foto.alt}</p>
+        <p className="text-sm text-hoja-suave">Foto pendiente</p>
       </div>
     </div>
   );

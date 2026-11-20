@@ -2,6 +2,7 @@ import { useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ConCatalogo } from '../components/Estado';
 import { Contador } from '../components/Contador';
+import { Ilustracion, colorCategoria, ilustracionProducto } from '../components/Ilustracion';
 import { useCarrito } from '../state/carrito';
 import { useTitulo } from '../lib/useTitulo';
 import { claveProducto, clp, medidaLinda, nombreLindo } from '../lib/format';
@@ -30,8 +31,11 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
   if (!resumen || lineas.length === 0) {
     return (
       <div className="contenedor py-20 text-center">
-        <h1 className="letrero text-[2.3rem]">Tu pedido está vacío</h1>
-        <p className="mt-3 text-lg text-gris">Elige tus productos en la lista de precios.</p>
+        <span className="mx-auto grid size-32 place-items-center rounded-full bg-menta" aria-hidden="true">
+          <Ilustracion nombre="canasta" className="size-20" />
+        </span>
+        <h1 className="titulo mt-6 text-[2.3rem]">Tu pedido está vacío</h1>
+        <p className="mt-3 text-lg text-hoja-suave">Elige tus productos en la lista de precios.</p>
         <Link to="/pedido" className="boton boton-oscuro mt-8">
           Ir a la lista de precios
         </Link>
@@ -80,29 +84,36 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
   const nErrores = Object.values(errores).filter(Boolean).length;
 
   return (
-    <div className="contenedor grid gap-10 py-8 lg:grid-cols-[1fr_26rem] lg:py-12">
+    <div className="contenedor grid grid-cols-1 gap-10 py-8 lg:grid-cols-[1fr_26rem] lg:py-12">
       <section aria-labelledby="titulo-pedido">
         <Link to="/pedido" className="font-bold underline underline-offset-4">
           Volver a la lista de precios
         </Link>
-        <h1 id="titulo-pedido" className="letrero mt-4 text-[2.3rem] sm:text-[2.8rem]">
+        <h1 id="titulo-pedido" className="titulo mt-4 text-[2.3rem] sm:text-[2.8rem]">
           Tu pedido
         </h1>
-        <ul className="mt-6 divide-y-2 divide-linea border-y-2 border-linea">
+        <ul className="mt-6 grid gap-3">
           {lineas.map((p) => {
             const k = claveProducto(p);
             const q = carrito[k];
             const nombre = nombreLindo(p.n);
             return (
-              <li key={k} className="flex flex-wrap items-center gap-x-4 gap-y-2 py-4">
-                <div className="min-w-[10rem] flex-1">
+              <li key={k} className="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-3xl border-2 border-linea bg-papel p-3">
+                <span
+                  className="grid size-14 shrink-0 place-items-center rounded-2xl"
+                  style={{ background: colorCategoria(p.c) }}
+                  aria-hidden="true"
+                >
+                  <Ilustracion nombre={ilustracionProducto(p)} className="size-9" />
+                </span>
+                <div className="min-w-[9rem] flex-1">
                   <p className="text-[1.1rem] font-bold">{nombre}</p>
-                  <p className="text-gris">
+                  <p className="text-hoja-suave">
                     {clp(p.p)} {medidaLinda(p.m)}
                   </p>
                 </div>
                 <Contador cantidad={q} nombre={nombre} onCambiar={(d) => cambiar(k, d)} />
-                <p className="w-24 text-right text-[1.15rem] font-bold">{clp(p.p * q)}</p>
+                <p className="titulo-sm ml-auto w-24 text-right text-[1.25rem]">{clp(p.p * q)}</p>
               </li>
             );
           })}
@@ -110,7 +121,7 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
       </section>
 
       <aside className="lg:sticky lg:top-24 lg:self-start">
-        <div className="rounded-2xl border-2 border-tinta p-5">
+        <div className="rounded-[2rem] bg-menta p-6">
           <dl className="space-y-2 text-[1.1rem]">
             <div className="flex justify-between">
               <dt>Productos</dt>
@@ -120,11 +131,13 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
               <dt>Despacho</dt>
               <dd className="font-bold">{resumen.despachoTexto}</dd>
             </div>
-            <div className="flex justify-between border-t-2 border-tinta pt-3 text-[1.45rem]">
+            <div className="flex justify-between border-t-2 border-menta-fuerte pt-3 text-[1.45rem]">
               <dt className="font-bold">Total</dt>
-              <dd className="letrero">
+              <dd className="titulo">
                 {clp(resumen.total)}
-                {resumen.despachoTexto === 'Por confirmar' && <span className="block text-right font-sans text-sm font-bold"> + despacho</span>}
+                {resumen.despachoTexto === 'Por confirmar' && (
+                  <span className="block text-right font-sans text-sm font-bold"> + despacho</span>
+                )}
               </dd>
             </div>
           </dl>
@@ -135,13 +148,23 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
           )}
         </div>
 
-        <form onSubmit={confirmar} noValidate className="mt-6 space-y-4" aria-labelledby="titulo-datos">
-          <h2 id="titulo-datos" className="letrero text-[1.6rem]">
+        <form
+          onSubmit={confirmar}
+          noValidate
+          className="mt-6 space-y-4 rounded-[2rem] border-2 border-linea p-6"
+          aria-labelledby="titulo-datos"
+        >
+          <h2 id="titulo-datos" className="titulo text-[1.6rem]">
             ¿Dónde te lo llevamos?
           </h2>
 
           {nErrores > 0 && (
-            <div ref={resumenErrores} tabIndex={-1} role="alert" className="rounded-xl border-2 border-[#c0261d] bg-[#fff5f4] p-4 font-bold">
+            <div
+              ref={resumenErrores}
+              tabIndex={-1}
+              role="alert"
+              className="rounded-xl border-2 border-[#c0261d] bg-[#fff5f4] p-4 font-bold"
+            >
               Falta completar {nErrores === 1 ? 'un dato' : `${nErrores} datos`}:
               <ul className="mt-1 list-disc pl-6 font-normal">
                 {Object.values(errores)
@@ -154,7 +177,13 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
           )}
 
           <Campo etiqueta="Tu nombre" error={errores.nombre} id="nombre">
-            <input {...campo('nombre')} className="campo" autoComplete="name" aria-invalid={!!errores.nombre} aria-describedby={errores.nombre ? 'nombre-error' : undefined} />
+            <input
+              {...campo('nombre')}
+              className="campo"
+              autoComplete="name"
+              aria-invalid={!!errores.nombre}
+              aria-describedby={errores.nombre ? 'nombre-error' : undefined}
+            />
           </Campo>
           <Campo etiqueta="Teléfono o WhatsApp" error={errores.telefono} id="telefono">
             <input
@@ -181,7 +210,12 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
             <input {...campo('entrega')} className="campo" type="date" min={hoy.toISOString().slice(0, 10)} />
           </Campo>
           <Campo etiqueta="Comentarios" opcional id="comentarios">
-            <textarea {...campo('comentarios')} className="campo min-h-24" rows={3} placeholder="Ej: paltas para el fin de semana, tocar timbre…" />
+            <textarea
+              {...campo('comentarios')}
+              className="campo min-h-24"
+              rows={3}
+              placeholder="Ej: paltas para el fin de semana, tocar timbre…"
+            />
           </Campo>
 
           {/* Campo trampa: invisible para las personas, los robots lo llenan */}
@@ -197,11 +231,13 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
             </p>
           )}
 
-          <button type="submit" className="boton boton-oscuro w-full text-[1.15rem]" disabled={enviando}>
+          <button type="submit" className="boton boton-principal w-full text-[1.15rem]" disabled={enviando}>
             {enviando ? 'Enviando…' : 'Confirmar pedido'}
           </button>
-          <p className="text-center text-gris">En el siguiente paso nos envías el pedido por WhatsApp.</p>
-          {MODO_DEMO && <p className="text-center text-sm font-bold text-naranjo-texto">Modo demo: el pedido no se guarda en la planilla.</p>}
+          <p className="text-center text-hoja-suave">En el siguiente paso nos envías el pedido por WhatsApp.</p>
+          {MODO_DEMO && (
+            <p className="text-center text-sm font-bold text-naranjo-texto">Modo demo: el pedido no se guarda en la planilla.</p>
+          )}
         </form>
       </aside>
     </div>
@@ -226,10 +262,10 @@ function Campo({
   return (
     <div>
       <label htmlFor={id} className="mb-1.5 block font-bold">
-        {etiqueta} {opcional && <span className="font-normal text-gris">(opcional)</span>}
+        {etiqueta} {opcional && <span className="font-normal text-hoja-suave">(opcional)</span>}
       </label>
       {ayuda && (
-        <p id={`${id}-ayuda`} className="-mt-1 mb-1.5 text-sm text-gris">
+        <p id={`${id}-ayuda`} className="-mt-1 mb-1.5 text-sm text-hoja-suave">
           {ayuda}
         </p>
       )}

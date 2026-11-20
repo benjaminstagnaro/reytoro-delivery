@@ -6,7 +6,7 @@ export function Logo({ size = 56, className = '' }: { size?: number; className?:
       alt=""
       width={size}
       height={size}
-      className={`rounded-full bg-tinta ${className}`}
+      className={`rounded-full bg-hoja ${className}`}
       style={{ width: size, height: size }}
     />
   );

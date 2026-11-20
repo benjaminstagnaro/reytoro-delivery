@@ -32,87 +32,95 @@ export function Listo() {
     : [];
 
   return (
-    <div className="contenedor max-w-2xl py-10 text-center">
-      <div className="flex justify-center gap-2" aria-hidden="true">
-        <i className="h-2 w-12 rounded-full bg-hoja" />
-        <i className="h-2 w-12 rounded-full bg-hoja" />
-        <i className={`h-2 w-12 rounded-full ${enviado ? 'bg-hoja' : 'bg-linea'}`} />
+    <div className="px-3 pt-2 pb-12 md:px-6">
+      <div className="panel bg-menta">
+        <div className="contenedor max-w-2xl py-10 text-center md:py-14">
+          <div className="flex justify-center gap-2" aria-hidden="true">
+            <i className="h-2 w-12 rounded-full bg-hoja" />
+            <i className="h-2 w-12 rounded-full bg-hoja" />
+            <i className={`h-2 w-12 rounded-full ${enviado ? 'bg-hoja' : 'bg-menta-fuerte'}`} />
+          </div>
+          <h1 ref={titulo} tabIndex={-1} className="titulo mt-6 text-[2.4rem] outline-none sm:text-[3rem]">
+            {enviado ? '¡Gracias por tu pedido!' : '¡Falta un último paso!'}
+          </h1>
+          <p className="mt-2 text-hoja-suave">Pedido hecho el {pedido.hecho}</p>
+          <p className="mx-auto mt-4 max-w-md text-[1.2rem]">
+            {enviado ? (
+              'Si ya lo enviaste por WhatsApp, está todo listo.'
+            ) : (
+              <>
+                Toca el botón verde para <strong>enviarnos tu pedido por WhatsApp</strong>. Así lo confirmamos y lo preparamos.
+              </>
+            )}
+          </p>
+
+          {recordar && !enviado && (
+            <p role="alert" className="mx-auto mt-5 max-w-md rounded-2xl bg-papel p-3 font-bold text-naranjo-texto">
+              Primero envía tu pedido por WhatsApp, con el botón verde.
+            </p>
+          )}
+
+          <a
+            href={linkWhatsApp(pedido.whatsapp, pedido.mensaje)}
+            target="_blank"
+            rel="noopener"
+            onClick={() => setTimeout(() => setEnviado(true), 600)}
+            className={`boton mx-auto mt-6 w-full max-w-md text-[1.3rem] ${enviado ? 'boton-borde' : 'boton-wa latido min-h-16 shadow-[0_8px_24px_rgb(37_211_102/0.45)]'}`}
+          >
+            <IconoWhatsApp />
+            {enviado ? 'Abrir WhatsApp de nuevo' : 'Enviar pedido por WhatsApp'}
+          </a>
+          {!enviado && (
+            <p className="mt-3 text-hoja-suave">
+              El mensaje ya va escrito: en WhatsApp solo toca <strong className="text-hoja">enviar</strong>.
+            </p>
+          )}
+        </div>
       </div>
-      <h1 ref={titulo} tabIndex={-1} className="letrero mt-6 text-[2.4rem] outline-none sm:text-[3rem]">
-        {enviado ? '¡Gracias por tu pedido!' : '¡Falta un último paso!'}
-      </h1>
-      <p className="mt-2 text-gris">Pedido hecho el {pedido.hecho}</p>
-      <p className="mx-auto mt-4 max-w-md text-[1.2rem]">
-        {enviado ? (
-          'Si ya lo enviaste por WhatsApp, está todo listo.'
-        ) : (
-          <>
-            Toca el botón verde para <strong>enviarnos tu pedido por WhatsApp</strong>. Así lo confirmamos y lo preparamos.
-          </>
-        )}
-      </p>
 
-      {recordar && !enviado && (
-        <p role="alert" className="mx-auto mt-5 max-w-md rounded-xl border-2 border-naranjo bg-[#fff6ef] p-3 font-bold text-naranjo-texto">
-          Primero envía tu pedido por WhatsApp, con el botón verde.
-        </p>
-      )}
-
-      <a
-        href={linkWhatsApp(pedido.whatsapp, pedido.mensaje)}
-        target="_blank"
-        rel="noopener"
-        onClick={() => setTimeout(() => setEnviado(true), 600)}
-        className={`boton mx-auto mt-6 w-full max-w-md text-[1.3rem] ${enviado ? 'boton-borde' : 'boton-wa latido min-h-16 shadow-[0_8px_24px_rgb(37_211_102/0.45)]'}`}
-      >
-        <IconoWhatsApp />
-        {enviado ? 'Abrir WhatsApp de nuevo' : 'Enviar pedido por WhatsApp'}
-      </a>
-      {!enviado && (
-        <p className="mt-3 text-gris">
-          El mensaje ya va escrito: en WhatsApp solo toca <strong className="text-tinta">enviar</strong>.
-        </p>
-      )}
-
-      <div className="mt-10 rounded-2xl border-2 border-naranjo bg-[#fff6ef] p-5 text-left">
-        <h2 className="text-[1.35rem] font-bold text-naranjo-texto">Transfiere al recibir tu pedido</h2>
-        <p className="mt-1">No pagues ahora. Cuando te llegue el pedido, transfiere el total a estos datos:</p>
-        <dl className="mt-4 divide-y divide-linea rounded-xl bg-papel px-4">
-          {banco.map(([k, v]) => (
-            <div key={k} className="flex flex-wrap justify-between gap-x-4 py-2.5">
-              <dt className="text-gris">{k}</dt>
-              <dd className="font-bold">{v}</dd>
+      <div className="contenedor max-w-2xl text-center">
+        <div className="mt-8 rounded-[2rem] bg-[#ffe9c9] p-6 text-left">
+          <h2 className="titulo-sm text-[1.5rem] text-naranjo-texto">Transfiere al recibir tu pedido</h2>
+          <p className="mt-1">No pagues ahora. Cuando te llegue el pedido, transfiere el total a estos datos:</p>
+          <dl className="mt-4 divide-y divide-linea rounded-2xl bg-papel px-4">
+            {banco.map(([k, v]) => (
+              <div key={k} className="flex flex-wrap justify-between gap-x-4 py-2.5">
+                <dt className="text-hoja-suave">{k}</dt>
+                <dd className="font-bold">{v}</dd>
+              </div>
+            ))}
+          </dl>
+          <dl className="mt-4 space-y-1 text-[1.1rem]">
+            <div className="flex justify-between">
+              <dt>Productos</dt>
+              <dd className="font-bold">{clp(pedido.subtotal)}</dd>
             </div>
-          ))}
-        </dl>
-        <dl className="mt-4 space-y-1 text-[1.1rem]">
-          <div className="flex justify-between">
-            <dt>Productos</dt>
-            <dd className="font-bold">{clp(pedido.subtotal)}</dd>
-          </div>
-          <div className="flex justify-between">
-            <dt>Despacho</dt>
-            <dd className="font-bold">{pedido.despacho > 0 ? clp(pedido.despacho) : pedido.despachoTexto}</dd>
-          </div>
-          <div className="flex justify-between border-t-2 border-tinta pt-2 text-[1.35rem]">
-            <dt className="font-bold">Total</dt>
-            <dd className="letrero">
-              {clp(pedido.total)}
-              {pedido.despachoTexto === 'Por confirmar' && ' + despacho'}
-            </dd>
-          </div>
-        </dl>
-      </div>
+            <div className="flex justify-between">
+              <dt>Despacho</dt>
+              <dd className="font-bold">{pedido.despacho > 0 ? clp(pedido.despacho) : pedido.despachoTexto}</dd>
+            </div>
+            <div className="flex justify-between border-t-2 border-[#f3cf9c] pt-2 text-[1.35rem]">
+              <dt className="font-bold">Total</dt>
+              <dd className="titulo">
+                {clp(pedido.total)}
+                {pedido.despachoTexto === 'Por confirmar' && (
+                  <span className="block text-right font-sans text-sm font-bold">+ despacho</span>
+                )}
+              </dd>
+            </div>
+          </dl>
+        </div>
 
-      {enviado ? (
-        <Link to="/pedido" className="boton boton-borde mt-8">
-          Hacer otro pedido
-        </Link>
-      ) : (
-        <button type="button" className="boton boton-borde mt-8" onClick={() => (recordar ? setEnviado(true) : setRecordar(true))}>
-          Hacer otro pedido
-        </button>
-      )}
+        {enviado ? (
+          <Link to="/pedido" className="boton boton-borde mt-8">
+            Hacer otro pedido
+          </Link>
+        ) : (
+          <button type="button" className="boton boton-borde mt-8" onClick={() => (recordar ? setEnviado(true) : setRecordar(true))}>
+            Hacer otro pedido
+          </button>
+        )}
+      </div>
     </div>
   );
 }

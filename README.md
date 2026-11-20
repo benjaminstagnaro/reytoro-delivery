@@ -25,11 +25,11 @@ Los clientes eligen sus productos desde el celular, ven su total en vivo y enví
 - Botón **"Aa"** que agranda toda la página en tres pasos (se recuerda en el navegador).
 - Botones de al menos 48 px, textos simples ("$5.990 el kilo") y contraste WCAG AA en todos los colores.
 - Navegación completa con teclado, foco visible, enlace "Saltar al contenido" y respeto por "reducir movimiento".
-- Precios como **letreros de cartulina de feria**: amarillo el precio normal, fucsia las ofertas.
+- Diseño **fresco y luminoso**: fondo blanco y menta, títulos en **Bricolage Grotesque** y cada categoría con su color e ilustración propia (dibujos SVG hechos para el proyecto).
 
 ## Funcionalidades
 
-- **Lista de precios** por categorías (con emoji), buscador sin tildes, ofertas y filtro "Mi pedido".
+- **Lista de precios** por categorías con color e ilustración, buscador sin tildes (también desde la portada), ofertas y filtro "Mi pedido".
 - **Carrito** guardado en el navegador, total en vivo y barra de avance hacia el despacho gratis.
 - **Repetir mi último pedido** con un toque.
 - **Envío del pedido**: se guarda en la planilla (Apps Script), llega un correo de aviso y el cliente lo manda por WhatsApp con el mensaje ya escrito.
@@ -66,7 +66,7 @@ Para conectarlo a la planilla real, copia `.env.example` a `.env` y completa `VI
 ```
 src/
   pages/        Inicio, Pedido (lista), TuPedido, Listo, Arriendo (food truck y casa)
-  components/   Encabezado, Cartel (precio), FilaProducto, Contador, Galeria, Pie…
+  components/   Encabezado, Ilustracion (dibujos SVG), FilaProducto, Contador, Galeria, Pie…
   state/        Catálogo, carrito y tamaño de letra (React Context)
   lib/          API, formatos, carrito (con pruebas)
   content/      Textos y fotos de los arriendos

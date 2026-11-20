@@ -17,7 +17,7 @@ export function ConCatalogo({ children }: { children: (c: Catalogo) => ReactNode
     return (
       <div className="contenedor py-20 text-center" role="alert">
         <p className="text-xl font-bold">{estado.mensaje}</p>
-        <p className="mt-2 text-gris">Revisa tu conexión a internet e inténtalo de nuevo.</p>
+        <p className="mt-2 text-hoja-suave">Revisa tu conexión a internet e inténtalo de nuevo.</p>
         <button type="button" className="boton boton-oscuro mt-6" onClick={reintentar}>
           Intentar de nuevo
         </button>

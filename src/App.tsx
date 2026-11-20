@@ -31,7 +31,7 @@ export default function App() {
             <VolverArriba />
             <a
               href="#contenido"
-              className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-cartulina focus:px-4 focus:py-3 focus:font-bold"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-menta focus:px-4 focus:py-3 focus:font-bold"
             >
               Saltar al contenido
             </a>
