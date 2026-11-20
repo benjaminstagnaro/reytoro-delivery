@@ -38,7 +38,7 @@ for (y, n, w, h) in niveles:
     for i in range(n + 1):
         x = int(i * paso - paso * 0.35 + random.randint(-40, 40))
         cajon(orden[i % len(orden)], x, y + random.randint(-25, 25), w + random.randint(-30, 30), h)
-c = c.filter(ImageFilter.GaussianBlur(int(os.environ.get("BLUR", 12))))
+c = c.filter(ImageFilter.GaussianBlur(int(os.environ.get("BLUR", 16))))
 c = ImageEnhance.Color(c).enhance(1.12)
 c = ImageEnhance.Brightness(c).enhance(0.92)
 c = c.resize((1920, 1080), Image.LANCZOS)
