@@ -1,0 +1,32 @@
+{
+  "name": "reytoro-delivery",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Rey Toro Delivery: tienda de frutas y verduras a domicilio, arriendo de food truck y casa en la playa.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && node scripts/spa-fallback.mjs",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "@fontsource-variable/archivo": "5.3.0",
+    "@fontsource/atkinson-hyperlegible-next": "5.3.0",
+    "react": "19.1.10",
+    "react-dom": "19.1.10",
+    "react-router": "7.18.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.5",
+    "@types/node": "^22.10.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "5.2.0",
+    "tailwindcss": "4.3.5",
+    "typescript": "5.9.3",
+    "vite": "7.3.8",
+    "vitest": "3.2.7"
+  }
+}

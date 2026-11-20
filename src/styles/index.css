@@ -1,0 +1,222 @@
+@import 'tailwindcss';
+@import '@fontsource/atkinson-hyperlegible-next/400.css';
+@import '@fontsource/atkinson-hyperlegible-next/700.css';
+@import '@fontsource-variable/archivo/wdth.css';
+
+/*
+  Rey Toro Delivery — sistema visual
+  - Tinta y naranjo: los colores del logo.
+  - Cartulina amarilla y fucsia: los letreros de precio de la feria (solo en precios y ofertas).
+  - Atkinson Hyperlegible: letra hecha para leerse fácil con baja visión.
+  - Archivo ancha y gruesa: títulos y precios, como letras de letrero.
+  Todos los pares de color de texto cumplen contraste WCAG AA (≥ 4.5:1).
+*/
+@theme {
+  --color-tinta: #171717;
+  --color-papel: #ffffff;
+  --color-naranjo: #e8742f;
+  --color-naranjo-claro: #f28c3f;
+  --color-naranjo-texto: #b4501a;
+  --color-cartulina: #ffe53b;
+  --color-fucsia: #ff6fb0;
+  --color-hoja: #1f7a3a;
+  --color-wa: #25d366;
+  --color-gris: #5c5a55;
+  --color-feria: #f1f5ee;
+  --color-linea: #dcdcd5;
+
+  --font-sans: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
+  --font-letrero: 'Archivo Variable', 'Arial Black', system-ui, sans-serif;
+
+  --radius-cartel: 0.35rem;
+}
+
+/* Tamaño de letra ajustable (botón "Aa" del menú). Todo está en rem, así que crece la página completa. */
+html {
+  font-size: 112.5%; /* 18px: base más grande de lo habitual, pensada para gente mayor */
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* Lo que queda fijo arriba (menú, secciones) y abajo (total) nunca tapa lo que se está usando */
+  scroll-padding-top: 9.5rem;
+  scroll-padding-bottom: 7.5rem;
+}
+html[data-texto='grande'] {
+  font-size: 125%;
+}
+html[data-texto='muy-grande'] {
+  font-size: 140%;
+}
+
+body {
+  background: var(--color-papel);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+}
+
+/* Foco visible y grueso para quien navega con teclado */
+:focus-visible {
+  outline: 3px solid var(--color-tinta);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--color-cartulina);
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  /* Título de letrero: Archivo ancha y negra */
+  .letrero {
+    font-family: var(--font-letrero);
+    font-variation-settings: 'wdth' 118;
+    font-weight: 850;
+    letter-spacing: -0.015em;
+    line-height: 0.98;
+  }
+
+  /* Cartel de precio de feria: cartulina fluorescente con letra de plumón */
+  .cartel {
+    font-family: var(--font-letrero);
+    font-variation-settings: 'wdth' 100;
+    font-weight: 800;
+    background: var(--color-cartulina);
+    color: var(--color-tinta);
+    border-radius: var(--radius-cartel);
+    box-shadow:
+      0 1px 0 rgb(0 0 0 / 0.25),
+      inset 0 0 0 2px rgb(0 0 0 / 0.08);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .cartel-oferta {
+    background: var(--color-fucsia);
+  }
+
+  .boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 3.25rem;
+    padding: 0.75rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
+    transition: transform 0.12s ease, background-color 0.15s ease;
+  }
+  .boton:active {
+    transform: scale(0.98);
+  }
+  .boton-principal {
+    background: var(--color-naranjo);
+    color: var(--color-tinta);
+  }
+  .boton-principal:hover {
+    background: var(--color-naranjo-claro);
+  }
+  .boton-oscuro {
+    background: var(--color-tinta);
+    color: var(--color-papel);
+  }
+  .boton-oscuro:hover {
+    background: #333;
+  }
+  .boton-borde {
+    background: transparent;
+    color: var(--color-tinta);
+    box-shadow: inset 0 0 0 2px var(--color-tinta);
+  }
+  .boton-wa {
+    background: var(--color-wa);
+    color: var(--color-tinta);
+  }
+  .boton[disabled],
+  .boton[aria-disabled='true'] {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .campo {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.7rem 0.9rem;
+    border: 2px solid var(--color-linea);
+    border-radius: 0.6rem;
+    background: var(--color-papel);
+    font-size: 1.05rem;
+  }
+  .campo:focus {
+    border-color: var(--color-tinta);
+    outline: none;
+  }
+  .campo[aria-invalid='true'] {
+    border-color: #c0261d;
+    background: #fff5f4;
+  }
+
+  .contenedor {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.1rem;
+  }
+}
+
+/* Aviso en movimiento: 6 copias, se desplaza la mitad para que no se note el corte */
+.aviso-pista {
+  animation: aviso-correr 38s linear infinite;
+}
+@keyframes aviso-correr {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aviso-pista {
+    animation: none;
+    width: auto;
+    justify-content: center;
+  }
+  .aviso-pista span:not(:first-child) {
+    display: none;
+  }
+}
+
+/* Botón de WhatsApp de la pantalla final: un latido suave para llamar la atención */
+.latido {
+  animation: latido 1.7s ease-in-out infinite;
+}
+@keyframes latido {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.035);
+  }
+}
+
+/* Fondo de foto pendiente: rayas como toldo de feria */
+.toldo {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-feria) 0 18px,
+    #e3eadd 18px 36px
+  );
+}

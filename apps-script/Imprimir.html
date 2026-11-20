@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_blank">
+<meta charset="utf-8">
+<style>
+<?!= estilo ?>
+  body { margin: 0; background: #e9e6df; font-family: Arial, Helvetica, sans-serif; }
+  .barra { position: sticky; top: 0; z-index: 2; display: flex; gap: 10px; align-items: center;
+    background: #1c1b19; color: #fff; padding: 10px 14px; }
+  .barra .t { flex: 1; font-size: 14px; }
+  .barra button { border: none; border-radius: 8px; padding: 10px 16px; font-size: 15px; font-weight: bold; cursor: pointer; }
+  .imp { background: #e8742f; color: #fff; }
+  .pdf { background: #fff; color: #111; }
+  .msg { font-size: 13px; color: #ffd27a; }
+  .msg a { color: #7ee2a2; }
+  .papel { background: #fff; width: 760px; margin: 16px auto; padding: 36px 40px; box-shadow: 0 2px 10px rgba(0,0,0,.15); }
+  @media print {
+    body { background: #fff; }
+    .barra { display: none; }
+    .papel { width: auto; margin: 0; padding: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="barra">
+    <div class="t"><?= resumen ?></div>
+    <span class="msg" id="msg"></span>
+    <button class="pdf" id="pdf">Guardar PDF</button>
+    <button class="imp" id="imp">🖨️ Imprimir</button>
+  </div>
+  <div class="papel"><?!= hojas ?></div>
+<script>
+  const NUMEROS = <?!= numeros ?>;
+  const MODO = <?!= modo ?>;
+  document.getElementById('imp').addEventListener('click', function () { window.print(); });
+  document.getElementById('pdf').addEventListener('click', function () {
+    const b = this, msg = document.getElementById('msg');
+    b.disabled = true; b.textContent = 'Creando PDF…'; msg.textContent = '';
+    google.script.run
+      .withSuccessHandler(function (url) {
+        b.disabled = false; b.textContent = 'Guardar PDF';
+        msg.innerHTML = 'Listo: <a href="' + url + '" target="_blank">abrir PDF</a> (quedó en tu Drive)';
+      })
+      .withFailureHandler(function (e) {
+        b.disabled = false; b.textContent = 'Guardar PDF';
+        msg.textContent = 'No se pudo crear el PDF: ' + (e && e.message ? e.message : e);
+      })
+      .guardarPdfPedidos(NUMEROS, MODO);
+  });
+</script>
+</body>
+</html>
