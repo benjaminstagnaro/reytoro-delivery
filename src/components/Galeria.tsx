@@ -10,6 +10,10 @@ export function Galeria({ fotos }: { fotos: FotoArriendo[] }) {
   const [abierta, setAbierta] = useState<number | null>(null);
   const reales = fotos.filter((f) => f.src);
   const [principal, ...resto] = fotos;
+  // Debajo de las 3 grandes, máximo 8 recuadros: si hay más, el último dice "+N" y abre el visor.
+  const abajo = resto.slice(2);
+  const miniaturas = abajo.length > 8 ? abajo.slice(0, 7) : abajo;
+  const ocultas = abajo.length > 8 ? abajo.slice(7) : [];
 
   const abrir = (f: FotoArriendo) => {
     const i = reales.indexOf(f);
@@ -39,9 +43,22 @@ export function Galeria({ fotos }: { fotos: FotoArriendo[] }) {
         {principal && celda(principal, 'aspect-[4/3] md:row-span-2 md:aspect-auto', true, '(min-width: 768px) 66vw, 100vw')}
         {resto.slice(0, 2).map((f) => celda(f, 'aspect-[4/3]', false, '(min-width: 768px) 33vw, 100vw'))}
       </div>
-      {resto.length > 2 && (
+      {miniaturas.length > 0 && (
         <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
-          {resto.slice(2).map((f) => celda(f, 'aspect-[4/3]', false, '(min-width: 768px) 25vw, 50vw'))}
+          {miniaturas.map((f) => celda(f, 'aspect-[4/3]', false, '(min-width: 768px) 25vw, 50vw'))}
+          {ocultas.length > 0 && (
+            <button
+              type="button"
+              onClick={() => abrir(ocultas[0])}
+              className="relative aspect-[4/3] overflow-hidden rounded-2xl"
+              aria-label={`Ver ${ocultas.length} fotos más`}
+            >
+              <Foto foto={ocultas[0]} sizes="(min-width: 768px) 25vw, 50vw" />
+              <span className="absolute inset-0 grid place-items-center bg-tinta/65 text-papel">
+                <span className="letrero text-[2rem]">+{ocultas.length}</span>
+              </span>
+            </button>
+          )}
         </div>
       )}
       {reales.length > 0 && (

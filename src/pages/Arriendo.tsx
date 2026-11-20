@@ -80,10 +80,42 @@ function PaginaArriendo({ arriendo, conFechas, emoji }: { arriendo: Arriendo; co
         </div>
 
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <Consulta arriendo={arriendo} conFechas={conFechas} whatsapp={whatsapp} />
+          {arriendo.reserva ? (
+            <Reserva arriendo={arriendo} whatsapp={whatsapp} />
+          ) : (
+            <Consulta arriendo={arriendo} conFechas={conFechas} whatsapp={whatsapp} />
+          )}
         </aside>
       </section>
     </>
+  );
+}
+
+/** Cuando ya existe una página de reservas (Airbnb): botón grande hacia ella y WhatsApp para dudas. */
+function Reserva({ arriendo, whatsapp }: { arriendo: Arriendo; whatsapp: string }) {
+  const r = arriendo.reserva!;
+  return (
+    <div className="rounded-2xl border-2 border-tinta p-5">
+      <h2 className="letrero text-[1.6rem]">¿Te interesa?</h2>
+      <p className="mt-1 text-gris">{r.nota}</p>
+      <a href={r.url} target="_blank" rel="noopener" className="boton boton-oscuro mt-5 w-full text-[1.15rem]">
+        {r.texto} en {r.sitio}
+        <span className="sr-only"> (se abre en otra pestaña)</span>
+      </a>
+      {whatsapp && (
+        <p className="mt-5 border-t-2 border-linea pt-4">
+          ¿Tienes alguna duda antes de reservar?{' '}
+          <a
+            href={linkWhatsApp(whatsapp, arriendo.mensajeWhatsApp)}
+            target="_blank"
+            rel="noopener"
+            className="font-bold underline underline-offset-4"
+          >
+            Escríbenos por WhatsApp
+          </a>
+        </p>
+      )}
+    </div>
   );
 }
 

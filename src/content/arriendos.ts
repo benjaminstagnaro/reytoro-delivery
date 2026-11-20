@@ -27,6 +27,8 @@ export interface Arriendo {
   condiciones: string[];
   /** Mensaje inicial de WhatsApp al consultar */
   mensajeWhatsApp: string;
+  /** Si existe, el botón principal lleva a esta página para reservar (ej: Airbnb) */
+  reserva?: { url: string; texto: string; sitio: string; nota?: string };
 }
 
 export const foodTruck: Arriendo = {
@@ -54,9 +56,8 @@ export const foodTruck: Arriendo = {
 };
 
 export const casaPlaya: Arriendo = {
-  pendiente: 'Faltan por confirmar la ubicación, la capacidad y el precio.',
-  titulo: 'Casa en la playa',
-  bajada: 'Casa en condominio con piscinas, sauna y áreas verdes, cerca del mar.',
+  titulo: 'Casa en la playa en Algarrobo',
+  bajada: 'Casa en condominio con piscina, a pocas cuadras de la playa. Ideal para descansar en familia.',
   fotos: [
     { src: 'fotos/casa-playa/01-piscina.webp', alt: 'Piscina del condominio' },
     { src: 'fotos/casa-playa/02-living-comedor.webp', alt: 'Living y comedor' },
@@ -69,27 +70,42 @@ export const casaPlaya: Arriendo = {
     { src: 'fotos/casa-playa/09-sauna.webp', alt: 'Sauna' },
     { src: 'fotos/casa-playa/10-piscina-2.webp', alt: 'Otra piscina del condominio' },
     { src: 'fotos/casa-playa/11-juegos-ninos.webp', alt: 'Juegos para niños' },
-    { src: 'fotos/casa-playa/12-vista-balcon.webp', alt: 'Vista desde el balcón' },
-    { src: 'fotos/casa-playa/13-costa.webp', alt: 'La costa, cerca de la casa' },
+    { src: 'fotos/casa-playa/12-vista-balcon.webp', alt: 'Vista al mar desde el balcón' },
+    { src: 'fotos/casa-playa/13-costa.webp', alt: 'La costa de Algarrobo' },
   ],
   descripcion: [
-    'Arrendamos nuestra casa en un condominio tranquilo, con piscinas, sauna y juegos para niños, ideal para descansar en familia.',
-    'La casa tiene living-comedor, cocina equipada, terraza techada y patio con pasto.',
-    'Cuéntanos las fechas y cuántas personas son, y te respondemos con disponibilidad y precio.',
+    'Casa en un condominio seguro y tranquilo de Algarrobo, a pocas cuadras de la playa. Estás a unos 10 minutos a pie de la Plaza Porto Alegre, con playas y el Parque Canelillo cerca.',
+    'La casa tiene living-comedor, cocina equipada, terraza techada, patio con parrilla y vista al mar. El condominio tiene piscina, sauna y juegos para niños.',
+    'Las reservas se hacen por Airbnb, donde puedes ver las fechas libres, el precio y las opiniones de otros huéspedes.',
   ],
   datos: [
-    { etiqueta: 'Ubicación', valor: 'Por confirmar' },
-    { etiqueta: 'Capacidad', valor: 'Por confirmar' },
-    { etiqueta: 'Precio', valor: 'Consultar' },
+    { etiqueta: 'Ubicación', valor: 'Algarrobo, Valparaíso' },
+    { etiqueta: 'Capacidad', valor: 'Hasta 5 personas' },
+    { etiqueta: 'Dormitorios', valor: '2 dormitorios, 4 camas' },
+    { etiqueta: 'Baño', valor: '1 baño' },
+    { etiqueta: 'Opiniones en Airbnb', valor: '4,74 de 5 (61 reseñas)' },
+    { etiqueta: 'Anfitrión', valor: 'Superanfitrión en Airbnb' },
   ],
   incluye: [
-    'Piscinas del condominio',
-    'Sauna',
+    'Piscina del condominio',
+    'Sauna (con reserva previa)',
     'Juegos para niños',
+    'Parrilla y patio',
     'Terraza techada',
-    'Patio con pasto',
     'Cocina equipada',
+    'Estacionamiento gratis',
+    'Vista al mar',
   ],
-  condiciones: ['Mínimo de noches según temporada', 'Reserva con anticipación'],
-  mensajeWhatsApp: 'Hola, quiero consultar por el arriendo de la casa en la playa.',
+  condiciones: [
+    'Las sábanas no están incluidas; se pueden pedir con costo aparte.',
+    'El sauna se reserva con anticipación y tiene un costo aparte.',
+    'La reserva y el pago se hacen en Airbnb.',
+  ],
+  mensajeWhatsApp: 'Hola, tengo una consulta sobre la casa en Algarrobo.',
+  reserva: {
+    url: 'https://www.airbnb.cl/rooms/52151452',
+    texto: 'Ver fechas y reservar',
+    sitio: 'Airbnb',
+    nota: 'Se abre la página de la casa en Airbnb, con el precio y las fechas libres.',
+  },
 };

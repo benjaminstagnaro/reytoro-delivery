@@ -135,7 +135,7 @@ export function Inicio() {
         </h2>
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           <Servicio a="/food-truck" emoji="🚚" titulo="Food truck" texto="Equipado y listo para tu evento, cumpleaños o feria." />
-          <Servicio a="/casa-en-la-playa" emoji="🏖️" titulo="Casa en la playa" texto="Para descansar con la familia, a pasos del mar." />
+          <Servicio a="/casa-en-la-playa" emoji="🏖️" titulo="Casa en la playa" texto="Casa con piscina en Algarrobo, a pocas cuadras del mar." />
         </div>
       </section>
     </>
