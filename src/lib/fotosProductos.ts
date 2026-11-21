@@ -47,6 +47,7 @@ const REGLAS: Regla[] = [
   { nombre: /mani japones merken/, archivo: 'mani-japones-merken-suave' },
   { nombre: /mani japones/, archivo: 'mani-japones-normal' },
   { nombre: /mani salado/, archivo: 'mani-salado' },
+  { nombre: /mani\s+con \/ sin sal/, archivo: 'mani-salado' },
   { nombre: /mani sin sal/, archivo: 'mani-sin-sal' },
   { nombre: /maravilla/, archivo: 'maravillas-peladas' },
   { nombre: /semilla de zapallo/, archivo: 'semilla-de-zapallo' },

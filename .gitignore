@@ -7,3 +7,6 @@ dist
 .vscode/*
 !.vscode/extensions.json
 .tmp-fotos/
+
+# Copia local de la planilla real (trae datos bancarios): no subir
+catalogo.json
