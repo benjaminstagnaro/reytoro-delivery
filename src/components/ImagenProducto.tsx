@@ -6,7 +6,7 @@ import { Ilustracion, colorCategoria, ilustracionProducto } from './Ilustracion'
  * Cuadrado del producto: la foto si la tenemos; si no, el dibujo sobre el color de su categoría.
  * Es decorativa (alt vacío) porque el nombre del producto siempre va escrito al lado.
  */
-export function ImagenProducto({ producto, className = '' }: { producto: Pick<Producto, 'n' | 'c'>; className?: string }) {
+export function ImagenProducto({ producto, className = '' }: { producto: Pick<Producto, 'n' | 'c' | 'm'>; className?: string }) {
   const foto = fotoProducto(producto);
   return (
     <div
