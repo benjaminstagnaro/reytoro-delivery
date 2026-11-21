@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { fotoProducto } from './fotosProductos';
 
-const foto = (n: string, c = 'Frutas', m = 'KILO') => fotoProducto({ n, c, m })?.chica.match(/productos\/(.+)-256/)?.[1] ?? null;
+// La categoría ya no influye; se deja en las llamadas para que se lean mejor.
+const foto = (n: string, _c = 'Frutas', m = 'KILO') => fotoProducto({ n, m })?.chica.match(/productos\/(.+)-256/)?.[1] ?? null;
 
 describe('fotos de productos', () => {
   it('encuentra la foto por el nombre, con o sin tildes ni "oferta"', () => {
@@ -34,9 +35,17 @@ describe('fotos de productos', () => {
 
   it('no usa una foto que no corresponde', () => {
     expect(foto('PAPAS SOUFLÉ', 'Verduras')).toBeNull();
-    expect(foto('PEPINO ALASKA', 'Verduras', 'UNIDAD')).toBeNull();
-    expect(foto('LECHUGA MARINA', 'Verduras', 'UNIDAD')).toBeNull();
-    expect(foto('CEBOLLA EN POLVO', 'Otros')).toBeNull();
-    expect(foto('PLATANO CONFITADO', 'Otros')).toBeNull();
+    expect(foto('CEBOLLA EN POLVO', 'Otros', '250 GRS')).toBe('cebolla-en-polvo');
+    expect(foto('PLATANO CONFITADO', 'Otros', '250 GRS')).toBe('platano-confitado');
+    expect(foto('HARINA GARBANZO', 'Otros')).toBe('harina-garbanzo');
+    expect(foto('PAPAYAS AL JUGO FRASCO', 'Otros', '1 KILO')).toBe('papayas-al-jugo-frasco');
+  });
+
+  it('las mezclas usan su propia foto aunque nombren otros productos', () => {
+    expect(foto('MIX DESAYUNO (HOJUELAS, NUECES, MARAVILLAS, AVENA, ALMENDRA, COCO LAMINADO)', 'Otros', '250 GRS')).toBe('mix-desayuno');
+    expect(foto('ALMENDRAS OFERTA', 'Otros', 'SOLO KILO')).toBe('almendras-kilo');
+    expect(foto('ALMENDRAS', 'Otros', '250 GRS')).toBe('almendras');
+    expect(foto('MOTE FRESCO', 'Otros')).toBe('mote-fresco');
+    expect(foto('PAPA CAMOTE', 'Verduras')).toBe('papa-camote');
   });
 });
