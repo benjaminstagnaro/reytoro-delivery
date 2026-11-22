@@ -70,7 +70,12 @@ export function Pie() {
             </ul>
           </div>
         </div>
-        <p className="border-t border-white/15 py-5 text-center text-sm text-white/65">© {new Date().getFullYear()} Rey Toro Delivery</p>
+        <p className="border-t border-white/15 py-5 text-center text-sm text-white/75">
+          © {new Date().getFullYear()} Rey Toro Delivery ·{' '}
+          <Link to="/privacidad" className="underline underline-offset-4">
+            Tus datos y privacidad
+          </Link>
+        </p>
       </div>
     </footer>
   );

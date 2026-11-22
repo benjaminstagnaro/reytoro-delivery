@@ -230,6 +230,12 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
             {enviando ? 'Enviando…' : 'Confirmar pedido'}
           </button>
           <p className="text-center text-hoja-suave">En el siguiente paso nos envías el pedido por WhatsApp.</p>
+          <p className="text-center text-hoja-suave">
+            Usamos tus datos solo para entregarte el pedido; no los compartimos.{' '}
+            <Link to="/privacidad" className="font-bold text-hoja underline underline-offset-4">
+              Más sobre tus datos
+            </Link>
+          </p>
           {MODO_DEMO && (
             <p className="text-center text-sm font-bold text-naranjo-texto">Modo demo: el pedido no se guarda en la planilla.</p>
           )}

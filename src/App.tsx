@@ -12,6 +12,7 @@ import { TuPedido } from './pages/TuPedido';
 import { Listo } from './pages/Listo';
 import { CasaPlaya, FoodTruck } from './pages/Arriendo';
 import { NoEncontrado } from './pages/NoEncontrado';
+import { Privacidad } from './pages/Privacidad';
 
 /** Al cambiar de página, vuelve arriba (como en una página web normal). */
 function VolverArriba() {
@@ -47,6 +48,7 @@ export default function App() {
                   <Route path="/pedido/listo" element={<Listo />} />
                   <Route path="/food-truck" element={<FoodTruck />} />
                   <Route path="/casa-en-la-playa" element={<CasaPlaya />} />
+                  <Route path="/privacidad" element={<Privacidad />} />
                   <Route path="*" element={<NoEncontrado />} />
                 </Routes>
               </main>

@@ -38,6 +38,8 @@ interface CarritoCtx {
   recordarPedido: (c: Carrito) => void;
   cliente: DatosCliente;
   setCliente: (c: DatosCliente) => void;
+  /** Borra de este dispositivo los datos guardados (nombre, teléfono, dirección, último pedido y carrito) */
+  olvidarDatos: () => void;
 }
 
 const Ctx = createContext<CarritoCtx | null>(null);
@@ -84,6 +86,18 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
       setClienteState(c);
       // Se recuerdan solo nombre, teléfono y dirección para el próximo pedido.
       guardar(CLAVE_CLIENTE, { nombre: c.nombre, telefono: c.telefono, direccion: c.direccion });
+    },
+    olvidarDatos: () => {
+      for (const k of [CLAVE_CLIENTE, CLAVE_ULTIMO, CLAVE_CARRITO]) {
+        try {
+          localStorage.removeItem(k);
+        } catch {
+          /* sin almacenamiento: no hay nada que borrar */
+        }
+      }
+      setClienteState({ ...CLIENTE_VACIO });
+      setUltimo({});
+      setCarrito({});
     },
   };
 
