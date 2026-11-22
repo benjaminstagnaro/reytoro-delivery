@@ -92,6 +92,14 @@ const REGLAS: Regla[] = [
   { nombre: /\bmiel\b/, archivo: 'miel-de-abeja' },
   { nombre: /menta/, archivo: 'menta-fresca' },
   { nombre: /yerba mate/, archivo: 'yerba-mate' },
+  { nombre: /aceite.*oliva.*500/, archivo: 'aceite-oliva-500' },
+  { nombre: /aceite.*oliva/, archivo: 'aceite-oliva-1l' },
+  { nombre: /aceite/, archivo: 'aceite-vegetal' },
+
+  // Carnes
+  { nombre: /pechuga/, archivo: 'pechugas' },
+  { nombre: /chuleta/, archivo: 'chuletas' },
+  { nombre: /longaniza/, archivo: 'longaniza' },
 
   // Congelados (van primero: "congelado haba" no debe usar la foto de habas frescas)
   { nombre: /arandano.*congelad/, archivo: 'arandanos-congelados' },
@@ -174,7 +182,8 @@ const REGLAS: Regla[] = [
   { nombre: /lechugas? espanola/, archivo: 'lechuga' },
   { nombre: /mizuna/, archivo: 'mizuna' },
   { nombre: /papa camote/, archivo: 'papa-camote' },
-  { nombre: /papas? soufle/, archivo: null },
+  { nombre: /papas? soufle/, medida: /\b3\b/, archivo: 'papas-soufle-3' },
+  { nombre: /papas? soufle/, archivo: 'papas-soufle' },
   { nombre: /^papas?\b/, archivo: 'papas' },
   { nombre: /pepino alaska/, archivo: 'pepino-alaska' },
   { nombre: /pepino/, archivo: 'pepino' },

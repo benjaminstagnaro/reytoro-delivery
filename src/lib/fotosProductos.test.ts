@@ -34,11 +34,19 @@ describe('fotos de productos', () => {
   });
 
   it('no usa una foto que no corresponde', () => {
-    expect(foto('PAPAS SOUFLÉ', 'Verduras')).toBeNull();
     expect(foto('CEBOLLA EN POLVO', 'Otros', '250 GRS')).toBe('cebolla-en-polvo');
     expect(foto('PLATANO CONFITADO', 'Otros', '250 GRS')).toBe('platano-confitado');
     expect(foto('HARINA GARBANZO', 'Otros')).toBe('harina-garbanzo');
     expect(foto('PAPAYAS AL JUGO FRASCO', 'Otros', '1 KILO')).toBe('papayas-al-jugo-frasco');
+  });
+
+  it('aceites, carnes y papas souflé', () => {
+    expect(foto('ACEITE OLIVA  500  ML', 'Otros', '1 UN')).toBe('aceite-oliva-500');
+    expect(foto('ACEITE OLIVA  1 LT', 'Otros', '1 UN')).toBe('aceite-oliva-1l');
+    expect(foto('ACEITE VEGETAL 900 ML', 'Otros', '1 UN')).toBe('aceite-vegetal');
+    expect(foto('CHULETA CENTRO-PARRILLERA-PULPA  PIERNA', 'Carnes', '1 kilo')).toBe('chuletas');
+    expect(foto('PAPAS SOUFLÉ', 'Verduras')).toBe('papas-soufle');
+    expect(foto('PAPAS SOUFLÉ OFERTA', 'Verduras', '3 KILOS')).toBe('papas-soufle-3');
   });
 
   it('las mezclas usan su propia foto aunque nombren otros productos', () => {
