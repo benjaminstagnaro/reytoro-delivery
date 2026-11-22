@@ -17,7 +17,7 @@ export function CasaPlaya() {
 
 function PaginaArriendo({ arriendo, conFechas, emoji }: { arriendo: Arriendo; conFechas: boolean; emoji: string }) {
   const { estado } = useCatalogo();
-  const whatsapp = estado.tipo === 'listo' ? estado.catalogo.config.whatsapp : '';
+  const whatsapp = arriendo.whatsapp || (estado.tipo === 'listo' ? estado.catalogo.config.whatsapp : '');
 
   return (
     <>
@@ -36,9 +36,13 @@ function PaginaArriendo({ arriendo, conFechas, emoji }: { arriendo: Arriendo; co
         </div>
       </section>
 
-      <section className="contenedor py-10" aria-label="Fotos">
-        <Galeria fotos={arriendo.fotos} />
-      </section>
+      {arriendo.fotos.length > 0 ? (
+        <section className="contenedor py-10" aria-label="Fotos">
+          <Galeria fotos={arriendo.fotos} />
+        </section>
+      ) : (
+        <div className="py-5" />
+      )}
 
       <section className="contenedor grid grid-cols-1 gap-10 pb-16 lg:grid-cols-[1fr_24rem]">
         <div>
@@ -75,7 +79,7 @@ function PaginaArriendo({ arriendo, conFechas, emoji }: { arriendo: Arriendo; co
               </ul>
             </div>
             <div>
-              <h2 className="titulo text-[1.8rem]">Antes de reservar</h2>
+              <h2 className="titulo text-[1.8rem]">{arriendo.tituloCondiciones ?? 'Antes de reservar'}</h2>
               <ul className="mt-3 list-disc space-y-2 pl-6 text-[1.1rem]">
                 {arriendo.condiciones.map((c) => (
                   <li key={c}>{c}</li>
@@ -83,11 +87,15 @@ function PaginaArriendo({ arriendo, conFechas, emoji }: { arriendo: Arriendo; co
               </ul>
             </div>
           </div>
+
+          {arriendo.ubicacion && <Mapa {...arriendo.ubicacion} />}
         </div>
 
         <aside className="lg:sticky lg:top-24 lg:self-start">
           {arriendo.reserva ? (
             <Reserva arriendo={arriendo} whatsapp={whatsapp} />
+          ) : arriendo.precio ? (
+            <ArriendoMensual arriendo={arriendo} whatsapp={whatsapp} />
           ) : (
             <Consulta arriendo={arriendo} conFechas={conFechas} whatsapp={whatsapp} />
           )}
@@ -192,6 +200,107 @@ function Consulta({ arriendo, conFechas, whatsapp }: { arriendo: Arriendo; conFe
             Comentario <span className="font-normal text-hoja-suave">(opcional)</span>
           </label>
           <textarea id="nota" className="campo min-h-20" rows={2} value={nota} onChange={(e) => setNota(e.target.value)} />
+        </div>
+      </div>
+      <button type="submit" className="boton boton-wa mt-5 w-full text-[1.1rem]" disabled={!whatsapp}>
+        Consultar por WhatsApp
+      </button>
+    </form>
+  );
+}
+
+/** Mapa de Google con la dirección (no necesita clave) y botón para abrir la app de mapas. */
+function Mapa({ direccion, comuna }: { direccion: string; comuna: string }) {
+  const q = encodeURIComponent(`${direccion}, ${comuna}, Santiago, Chile`);
+  return (
+    <section className="mt-12" aria-labelledby="titulo-mapa">
+      <h2 id="titulo-mapa" className="titulo text-[1.8rem]">
+        Dónde está
+      </h2>
+      <p className="mt-2 text-[1.15rem]">
+        {direccion}, {comuna}
+      </p>
+      <div className="mt-4 overflow-hidden rounded-[2rem] border-2 border-linea">
+        <iframe
+          title={`Mapa: ${direccion}, ${comuna}`}
+          src={`https://www.google.com/maps?q=${q}&output=embed`}
+          className="block aspect-[4/3] w-full sm:aspect-[16/9]"
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
+      <a href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noopener" className="boton boton-suave mt-4">
+        Abrir en Google Maps<span className="sr-only"> (se abre en otra pestaña)</span>
+      </a>
+    </section>
+  );
+}
+
+/** Arriendo con precio fijo (food truck): precio grande y consulta por WhatsApp con lo que quiere vender. */
+function ArriendoMensual({ arriendo, whatsapp }: { arriendo: Arriendo; whatsapp: string }) {
+  const p = arriendo.precio!;
+  const [nombre, setNombre] = useState('');
+  const [comida, setComida] = useState('');
+  const [nota, setNota] = useState('');
+
+  const mensaje = [
+    arriendo.mensajeWhatsApp,
+    nombre ? `Mi nombre: ${nombre}` : '',
+    comida ? `Quiero vender: ${comida}` : '',
+    nota ? `Comentario: ${nota}` : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  function enviar(e: FormEvent) {
+    e.preventDefault();
+    if (whatsapp) window.open(linkWhatsApp(whatsapp, mensaje), '_blank', 'noopener');
+  }
+
+  return (
+    <form onSubmit={enviar} className="rounded-[2rem] bg-hoja p-6 text-papel">
+      <p className="text-white/80">Arriendo</p>
+      <p className="titulo text-[2.8rem] leading-none">
+        {p.monto} <span className="font-sans text-[1.2rem] font-bold">{p.periodo}</span>
+      </p>
+      {p.nota && <p className="mt-2 inline-block rounded-full bg-naranjo px-3 py-1 font-bold text-hoja">{p.nota}</p>}
+      {arriendo.ubicacion && (
+        <p className="mt-4 text-white/85">
+          {arriendo.ubicacion.direccion}, {arriendo.ubicacion.comuna}
+        </p>
+      )}
+
+      <div className="mt-6 grid gap-4 border-t border-white/20 pt-5">
+        <h2 className="titulo-sm text-[1.4rem]">Consulta por WhatsApp</h2>
+        <div>
+          <label htmlFor="ft-nombre" className="mb-1.5 block font-bold">
+            Tu nombre <span className="font-normal text-white/70">(opcional)</span>
+          </label>
+          <input
+            id="ft-nombre"
+            className="campo text-hoja"
+            autoComplete="name"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="ft-comida" className="mb-1.5 block font-bold">
+            ¿Qué te gustaría vender? <span className="font-normal text-white/70">(opcional)</span>
+          </label>
+          <input
+            id="ft-comida"
+            className="campo text-hoja"
+            placeholder="Ej: hamburguesas, sushi, café"
+            value={comida}
+            onChange={(e) => setComida(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="ft-nota" className="mb-1.5 block font-bold">
+            Comentario <span className="font-normal text-white/70">(opcional)</span>
+          </label>
+          <textarea id="ft-nota" className="campo min-h-20 text-hoja" rows={2} value={nota} onChange={(e) => setNota(e.target.value)} />
         </div>
       </div>
       <button type="submit" className="boton boton-wa mt-5 w-full text-[1.1rem]" disabled={!whatsapp}>

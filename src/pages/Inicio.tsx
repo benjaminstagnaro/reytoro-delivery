@@ -235,7 +235,7 @@ export function Inicio() {
             </div>
             <div className="p-6">
               <p className="titulo-sm text-[1.7rem]">Food truck</p>
-              <p className="mt-1 text-hoja-suave">Equipado y listo para tu evento, cumpleaños o feria.</p>
+              <p className="mt-1 text-hoja-suave">Food truck fijo en Ñuñoa, con patente comercial y terraza. $490.000 al mes.</p>
               <p className="mt-3 font-bold underline underline-offset-4">Ver detalles y consultar</p>
             </div>
           </Link>

@@ -29,30 +29,38 @@ export interface Arriendo {
   mensajeWhatsApp: string;
   /** Si existe, el botón principal lleva a esta página para reservar (ej: Airbnb) */
   reserva?: { url: string; texto: string; sitio: string; nota?: string };
+  /** Arriendo con precio fijo (ej: mensual): se muestra en grande en la caja de contacto */
+  precio?: { monto: string; periodo: string; nota?: string };
+  /** Dirección fija: se muestra con un mapa */
+  ubicacion?: { direccion: string; comuna: string };
+  /** WhatsApp propio de este arriendo (si no, usa el de la planilla) */
+  whatsapp?: string;
+  /** Título de la lista de condiciones (por defecto "Antes de reservar") */
+  tituloCondiciones?: string;
 }
 
 export const foodTruck: Arriendo = {
-  pendiente: 'Contenido de ejemplo: faltan las fotos y los datos reales del food truck.',
-  titulo: 'Arrienda nuestro food truck',
-  bajada: 'Equipado y listo para cocinar en tu evento, cumpleaños o feria.',
-  fotos: [
-    { src: '', alt: 'El food truck por fuera' },
-    { src: '', alt: 'Cocina del food truck' },
-    { src: '', alt: 'Ventana de atención' },
-    { src: '', alt: 'Food truck en un evento' },
-  ],
+  pendiente: 'Pronto subiremos fotos del food truck.',
+  titulo: 'Arrienda nuestro food truck en Ñuñoa',
+  bajada: 'Un food truck fijo, con patente comercial y terraza para tus clientes, listo para que instales tu negocio de comida.',
+  fotos: [],
   descripcion: [
-    'Tenemos un food truck propio que arrendamos para eventos particulares y de empresa.',
-    'Escríbenos con la fecha y el tipo de evento y te contamos disponibilidad y precio.',
+    'Es un food truck estático: está instalado de forma permanente en General Pedro Pablo Dartnell 1632, Ñuñoa, y se arrienda por mes para que trabajes ahí con tu propio negocio de comida.',
+    'El arriendo incluye la patente comercial, así que puedes empezar a vender sin hacer ese trámite. También incluye una terraza amoblada con mesas y sillas para tus clientes, baño y agua.',
+    'Escríbenos por WhatsApp para consultar disponibilidad.',
   ],
   datos: [
-    { etiqueta: 'Ubicación', valor: 'Por confirmar' },
-    { etiqueta: 'Ideal para', valor: 'Eventos, cumpleaños y ferias' },
-    { etiqueta: 'Precio', valor: 'Consultar' },
+    { etiqueta: 'Arriendo', valor: '$490.000 al mes' },
+    { etiqueta: 'Ubicación', valor: 'Dartnell 1632, Ñuñoa' },
+    { etiqueta: 'Tipo', valor: 'Food truck fijo' },
   ],
-  incluye: ['Cocina equipada', 'Ventana de atención', 'Conexión eléctrica'],
-  condiciones: ['Reserva con anticipación', 'Precio según días y lugar del evento'],
-  mensajeWhatsApp: 'Hola, quiero consultar por el arriendo del food truck.',
+  incluye: ['Patente comercial', 'Terraza amoblada', 'Mesas y sillas', 'Baño', 'Agua'],
+  tituloCondiciones: 'Bueno saber',
+  condiciones: ['Se arrienda por mes.', 'Es fijo: no se traslada a eventos.', 'El agua va incluida en el precio.'],
+  precio: { monto: '$490.000', periodo: 'al mes', nota: 'Incluye agua' },
+  ubicacion: { direccion: 'General Pedro Pablo Dartnell 1632', comuna: 'Ñuñoa' },
+  whatsapp: '56992417052',
+  mensajeWhatsApp: 'Hola, me interesa arrendar el food truck de Dartnell 1632, Ñuñoa.',
 };
 
 export const casaPlaya: Arriendo = {
