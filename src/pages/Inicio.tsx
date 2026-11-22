@@ -6,7 +6,7 @@ import { rutas } from '../lib/fotosProductos';
 import { useCatalogo } from '../state/catalogo';
 import { useTitulo } from '../lib/useTitulo';
 import { clp } from '../lib/format';
-import { casaPlaya } from '../content/arriendos';
+import { casaPlaya, foodTruck } from '../content/arriendos';
 import { Foto } from '../components/Foto';
 
 // Fotos de la portada, en círculos con el color de cada fruta como borde.
@@ -228,14 +228,12 @@ export function Inicio() {
             </div>
           </Link>
           <Link to="/food-truck" className="group block overflow-hidden rounded-[2rem] bg-[#ffe9c9] no-underline">
-            <div className="grid aspect-[16/10] place-items-center">
-              <span className="text-[6rem] transition-transform duration-500 group-hover:scale-110" aria-hidden="true">
-                🚚
-              </span>
+            <div className="aspect-[16/10] overflow-hidden">
+              <Foto foto={foodTruck.fotos[0]} className="transition-transform duration-500 group-hover:scale-[1.04]" />
             </div>
             <div className="p-6">
               <p className="titulo-sm text-[1.7rem]">Food truck</p>
-              <p className="mt-1 text-hoja-suave">Food truck fijo en Ñuñoa, con patente comercial y terraza. $490.000 al mes.</p>
+              <p className="mt-1 text-hoja-suave">Food truck fijo y equipado en Ñuñoa, con patente comercial y terraza. $490.000 al mes.</p>
               <p className="mt-3 font-bold underline underline-offset-4">Ver detalles y consultar</p>
             </div>
           </Link>

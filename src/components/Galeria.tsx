@@ -20,7 +20,8 @@ export function Galeria({ fotos }: { fotos: FotoArriendo[] }) {
     if (i >= 0) setAbierta(i);
   };
 
-  const celda = (f: FotoArriendo, clase: string, prioridad = false, sizes?: string) =>
+  // llenar = la foto no empuja la altura de la celda (la grande toma el alto de las dos de al lado, aunque sea vertical)
+  const celda = (f: FotoArriendo, clase: string, prioridad = false, sizes?: string, llenar = false) =>
     f.src ? (
       <button
         key={f.src + f.alt}
@@ -29,7 +30,12 @@ export function Galeria({ fotos }: { fotos: FotoArriendo[] }) {
         className={`group relative overflow-hidden rounded-3xl ${clase}`}
         aria-label={`Ver en grande: ${f.alt}`}
       >
-        <Foto foto={f} prioridad={prioridad} sizes={sizes} className="transition-transform duration-300 group-hover:scale-[1.03]" />
+        <Foto
+          foto={f}
+          prioridad={prioridad}
+          sizes={sizes}
+          className={`transition-transform duration-300 group-hover:scale-[1.03] ${llenar ? 'md:absolute md:inset-0' : ''}`}
+        />
       </button>
     ) : (
       <div key={f.alt} className={`overflow-hidden rounded-3xl ${clase}`}>
@@ -40,11 +46,13 @@ export function Galeria({ fotos }: { fotos: FotoArriendo[] }) {
   return (
     <>
       <div className="grid gap-3 md:grid-cols-[2fr_1fr] md:grid-rows-2">
-        {principal && celda(principal, 'aspect-[4/3] md:row-span-2 md:aspect-auto', true, '(min-width: 768px) 66vw, 100vw')}
+        {principal && celda(principal, 'aspect-[4/3] md:row-span-2 md:aspect-auto', true, '(min-width: 768px) 66vw, 100vw', true)}
         {resto.slice(0, 2).map((f) => celda(f, 'aspect-[4/3]', false, '(min-width: 768px) 33vw, 100vw'))}
       </div>
       {miniaturas.length > 0 && (
-        <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div
+          className={`mt-3 grid grid-cols-2 gap-3 ${miniaturas.length === 5 ? 'md:grid-cols-5' : miniaturas.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-4'}`}
+        >
           {miniaturas.map((f) => celda(f, 'aspect-[4/3]', false, '(min-width: 768px) 25vw, 50vw'))}
           {ocultas.length > 0 && (
             <button

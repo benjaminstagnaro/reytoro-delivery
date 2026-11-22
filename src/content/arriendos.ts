@@ -37,30 +37,75 @@ export interface Arriendo {
   whatsapp?: string;
   /** Título de la lista de condiciones (por defecto "Antes de reservar") */
   tituloCondiciones?: string;
+  /** Inventario por grupos (ej: cocina, terraza) */
+  equipamiento?: { grupo: string; items: string[] }[];
 }
 
 export const foodTruck: Arriendo = {
-  pendiente: 'Pronto subiremos fotos del food truck.',
   titulo: 'Arrienda nuestro food truck en Ñuñoa',
-  bajada: 'Un food truck fijo, con patente comercial y terraza para tus clientes, listo para que instales tu negocio de comida.',
-  fotos: [],
+  bajada: 'Un food truck fijo y equipado, con patente comercial y terraza para tus clientes. Se permite todo tipo de comida.',
+  fotos: [
+    { src: 'fotos/food-truck/01-food-truck-pergola.webp', alt: 'El food truck bajo la pérgola de madera' },
+    { src: 'fotos/food-truck/02-costado-terraza.webp', alt: 'Costado del food truck y la terraza techada' },
+    { src: 'fotos/food-truck/03-terraza-mesas.webp', alt: 'Terraza con mesas y sillas para los clientes' },
+    { src: 'fotos/food-truck/04-cocina-plancha-campana.webp', alt: 'Cocina con anafes, freidora y campana' },
+    { src: 'fotos/food-truck/05-anafes-lavaplatos.webp', alt: 'Anafes, campana y lavaplatos' },
+    { src: 'fotos/food-truck/06-mesones-acero.webp', alt: 'Interior con mesones de acero inoxidable' },
+    { src: 'fotos/food-truck/07-pasillo-refrigerador.webp', alt: 'Pasillo interior con refrigerador vitrina' },
+    { src: 'fotos/food-truck/08-refrigerador-repisas.webp', alt: 'Refrigerador vitrina y repisas de acero' },
+  ],
   descripcion: [
     'Es un food truck estático: está instalado de forma permanente en General Pedro Pablo Dartnell 1632, Ñuñoa, y se arrienda por mes para que trabajes ahí con tu propio negocio de comida.',
-    'El arriendo incluye la patente comercial, así que puedes empezar a vender sin hacer ese trámite. También incluye una terraza amoblada con mesas y sillas para tus clientes, baño y agua.',
-    'Escríbenos por WhatsApp para consultar disponibilidad.',
+    'Viene con la cocina equipada y el arriendo incluye la patente comercial, así que puedes empezar a vender sin hacer ese trámite. Tus clientes tienen una terraza techada con mesas y sillas, y hay baño y agua.',
+    'Está disponible. Si te interesa, escríbenos o llámanos y conversamos los detalles.',
   ],
   datos: [
     { etiqueta: 'Arriendo', valor: '$490.000 al mes' },
     { etiqueta: 'Ubicación', valor: 'Dartnell 1632, Ñuñoa' },
-    { etiqueta: 'Tipo', valor: 'Food truck fijo' },
+    { etiqueta: 'Estado', valor: 'Disponible' },
   ],
-  incluye: ['Patente comercial', 'Terraza amoblada', 'Mesas y sillas', 'Baño', 'Agua'],
+  incluye: ['Patente comercial', 'Agua', 'Baño', 'Terraza techada y amoblada', 'Cocina equipada (ver abajo)'],
   tituloCondiciones: 'Bueno saber',
-  condiciones: ['Se arrienda por mes.', 'Es fijo: no se traslada a eventos.', 'El agua va incluida en el precio.'],
+  condiciones: [
+    'Se arrienda por mes.',
+    'Es fijo: no se traslada a eventos.',
+    'El agua va incluida. La luz y el gas los paga quien arrienda.',
+    'Se permite todo tipo de comida.',
+    'La garantía y el contrato se conversan directamente.',
+  ],
+  equipamiento: [
+    {
+      grupo: 'Cocina',
+      items: [
+        'Cocina',
+        '2 anafes',
+        'Plancha',
+        'Baño maría',
+        'Freidora Maigas de 18 litros',
+        'Campana con filtros de acero',
+        'Salsera con 9 unidades gastronómicas',
+        'Mesón de acero inoxidable',
+        '3 repisas de acero',
+        'Lavaplatos',
+      ],
+    },
+    {
+      grupo: 'Frío y gas',
+      items: ['Congelador de 100 litros', 'Cooler', 'Cilindro de gas de 11 kg', 'Cilindro de gas de 15 kg'],
+    },
+    {
+      grupo: 'Terraza',
+      items: ['3 mesas redondas', '1 mesa cuadrada', '4 sillas Tolix', '3 pisos de madera'],
+    },
+    {
+      grupo: 'Seguridad y aseo',
+      items: ['Extintor grande', 'Basurero'],
+    },
+  ],
   precio: { monto: '$490.000', periodo: 'al mes', nota: 'Incluye agua' },
   ubicacion: { direccion: 'General Pedro Pablo Dartnell 1632', comuna: 'Ñuñoa' },
   whatsapp: '56992417052',
-  mensajeWhatsApp: 'Hola, me interesa arrendar el food truck de Dartnell 1632, Ñuñoa.',
+  mensajeWhatsApp: 'Hola, vi la página y me interesa arrendar el food truck de Dartnell 1632, Ñuñoa.',
 };
 
 export const casaPlaya: Arriendo = {

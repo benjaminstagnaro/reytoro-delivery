@@ -88,6 +88,8 @@ function PaginaArriendo({ arriendo, conFechas, emoji }: { arriendo: Arriendo; co
             </div>
           </div>
 
+          {arriendo.equipamiento && <Equipamiento grupos={arriendo.equipamiento} />}
+
           {arriendo.ubicacion && <Mapa {...arriendo.ubicacion} />}
         </div>
 
@@ -236,29 +238,39 @@ function Mapa({ direccion, comuna }: { direccion: string; comuna: string }) {
   );
 }
 
-/** Arriendo con precio fijo (food truck): precio grande y consulta por WhatsApp con lo que quiere vender. */
+/** Inventario del carro, agrupado. */
+function Equipamiento({ grupos }: { grupos: { grupo: string; items: string[] }[] }) {
+  return (
+    <section className="mt-12" aria-labelledby="titulo-equipamiento">
+      <h2 id="titulo-equipamiento" className="titulo text-[1.8rem]">
+        Qué trae el food truck
+      </h2>
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        {grupos.map((g) => (
+          <div key={g.grupo} className="rounded-3xl border-2 border-linea p-5">
+            <h3 className="titulo-sm text-[1.3rem]">{g.grupo}</h3>
+            <ul className="mt-3 space-y-1.5 text-[1.05rem]">
+              {g.items.map((i) => (
+                <li key={i} className="flex gap-2.5">
+                  <span className="mt-2.5 size-2 shrink-0 rounded-full bg-naranjo" aria-hidden="true" />
+                  {i}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** Arriendo con precio fijo (food truck): precio grande y contacto directo con el dueño. */
 function ArriendoMensual({ arriendo, whatsapp }: { arriendo: Arriendo; whatsapp: string }) {
   const p = arriendo.precio!;
-  const [nombre, setNombre] = useState('');
-  const [comida, setComida] = useState('');
-  const [nota, setNota] = useState('');
-
-  const mensaje = [
-    arriendo.mensajeWhatsApp,
-    nombre ? `Mi nombre: ${nombre}` : '',
-    comida ? `Quiero vender: ${comida}` : '',
-    nota ? `Comentario: ${nota}` : '',
-  ]
-    .filter(Boolean)
-    .join('\n');
-
-  function enviar(e: FormEvent) {
-    e.preventDefault();
-    if (whatsapp) window.open(linkWhatsApp(whatsapp, mensaje), '_blank', 'noopener');
-  }
-
+  const telefono = whatsapp ? `+${whatsapp}` : '';
+  const telefonoLindo = whatsapp.replace(/^56(\d)(\d{4})(\d{4})$/, '+56 $1 $2 $3');
   return (
-    <form onSubmit={enviar} className="rounded-[2rem] bg-hoja p-6 text-papel">
+    <div className="rounded-[2rem] bg-hoja p-6 text-papel">
       <p className="text-white/80">Arriendo</p>
       <p className="titulo text-[2.8rem] leading-none">
         {p.monto} <span className="font-sans text-[1.2rem] font-bold">{p.periodo}</span>
@@ -270,42 +282,25 @@ function ArriendoMensual({ arriendo, whatsapp }: { arriendo: Arriendo; whatsapp:
         </p>
       )}
 
-      <div className="mt-6 grid gap-4 border-t border-white/20 pt-5">
-        <h2 className="titulo-sm text-[1.4rem]">Consulta por WhatsApp</h2>
-        <div>
-          <label htmlFor="ft-nombre" className="mb-1.5 block font-bold">
-            Tu nombre <span className="font-normal text-white/70">(opcional)</span>
-          </label>
-          <input
-            id="ft-nombre"
-            className="campo text-hoja"
-            autoComplete="name"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="ft-comida" className="mb-1.5 block font-bold">
-            ¿Qué te gustaría vender? <span className="font-normal text-white/70">(opcional)</span>
-          </label>
-          <input
-            id="ft-comida"
-            className="campo text-hoja"
-            placeholder="Ej: hamburguesas, sushi, café"
-            value={comida}
-            onChange={(e) => setComida(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="ft-nota" className="mb-1.5 block font-bold">
-            Comentario <span className="font-normal text-white/70">(opcional)</span>
-          </label>
-          <textarea id="ft-nota" className="campo min-h-20 text-hoja" rows={2} value={nota} onChange={(e) => setNota(e.target.value)} />
-        </div>
+      <div className="mt-6 border-t border-white/20 pt-5">
+        <h2 className="titulo-sm text-[1.4rem]">¿Te interesa?</h2>
+        <p className="mt-1 text-white/80">Conversemos: te contamos los detalles y coordinamos.</p>
+        {whatsapp && (
+          <>
+            <a
+              href={linkWhatsApp(whatsapp, arriendo.mensajeWhatsApp)}
+              target="_blank"
+              rel="noopener"
+              className="boton boton-wa mt-5 w-full text-[1.1rem]"
+            >
+              Escribir por WhatsApp<span className="sr-only"> (se abre en otra pestaña)</span>
+            </a>
+            <a href={`tel:${telefono}`} className="boton mt-3 w-full border-2 border-white/40 text-[1.1rem] text-papel hover:bg-white/10">
+              Llamar al {telefonoLindo}
+            </a>
+          </>
+        )}
       </div>
-      <button type="submit" className="boton boton-wa mt-5 w-full text-[1.1rem]" disabled={!whatsapp}>
-        Consultar por WhatsApp
-      </button>
-    </form>
+    </div>
   );
 }
