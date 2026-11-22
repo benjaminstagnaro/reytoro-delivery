@@ -45,15 +45,16 @@ export function Encabezado() {
     <header
       className={`sticky top-0 z-40 bg-papel/95 backdrop-blur transition-shadow ${conSombra ? 'shadow-[0_4px_20px_rgb(22_48_31/0.08)]' : ''}`}
     >
-      <div className="contenedor flex min-h-[4.5rem] items-center gap-2 sm:gap-3">
+      <div className="contenedor flex min-h-[4.5rem] items-center gap-2 max-sm:px-3.5 sm:gap-3">
         <Link
           to="/"
           className="flex min-w-0 shrink-0 items-center gap-2 rounded-full py-2 pr-1 no-underline sm:gap-3 sm:pr-2"
           aria-label="Rey Toro Delivery, ir al inicio"
         >
-          <Logo size={44} />
-          <span className="titulo-sm text-[1.2rem] whitespace-nowrap max-[25rem]:hidden sm:text-[1.3rem] [[data-texto=grande]_&]:max-[30rem]:hidden [[data-texto=muy-grande]_&]:max-sm:hidden">
-            Rey Toro
+          <Logo size={56} className="size-[44px] sm:size-[50px] lg:size-[60px]" />
+          <span className="flex flex-col leading-none whitespace-nowrap max-[22rem]:hidden [[data-texto=grande]_&]:max-[30rem]:hidden [[data-texto=muy-grande]_&]:max-sm:hidden">
+            <span className="titulo-sm text-[1.2rem] sm:text-[1.6rem]">Rey Toro</span>
+            <span className="mt-0.5 text-[0.8rem] font-bold text-hoja-suave sm:mt-1 sm:text-[0.95rem]">Delivery</span>
           </span>
         </Link>
 
@@ -83,7 +84,7 @@ export function Encabezado() {
           </button>
           <Link
             to="/pedido/tu-pedido"
-            className="boton boton-oscuro min-h-12 gap-1.5 px-3 sm:px-5"
+            className="boton boton-oscuro relative min-h-12 min-w-12 gap-1.5 px-3 sm:px-5"
             aria-label={n ? `Mi pedido: ${n} ${n === 1 ? 'producto' : 'productos'}` : 'Mi pedido (vacío)'}
           >
             <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
@@ -92,7 +93,11 @@ export function Encabezado() {
               <circle cx="17" cy="20" r="1.4" />
             </svg>
             <span className="hidden sm:inline">Mi pedido</span>
-            {n > 0 && <span className="grid min-w-7 place-items-center rounded-full bg-naranjo px-1.5 text-sm text-hoja">{n}</span>}
+            {n > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 grid h-6 min-w-6 place-items-center rounded-full bg-naranjo px-1.5 text-sm text-hoja ring-2 ring-papel sm:static sm:h-auto sm:min-w-7 sm:ring-0">
+                {n}
+              </span>
+            )}
           </Link>
           <button
             ref={botonMenu}

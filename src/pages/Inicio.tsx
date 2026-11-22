@@ -8,13 +8,13 @@ import { useTitulo } from '../lib/useTitulo';
 import { clp } from '../lib/format';
 import { casaPlaya, foodTruck } from '../content/arriendos';
 import { Foto } from '../components/Foto';
+import { Logo } from '../components/Logo';
 
 // Fotos de la portada, en círculos con el color de cada fruta como borde.
 const BURBUJAS: { archivo: string; color: string; clase: string; retraso: number }[] = [
   { archivo: 'naranjas', color: '#ffcf8a', clase: 'left-[4%] top-[2%] w-[48%]', retraso: 0 },
   { archivo: 'frutillas', color: '#ff9c8a', clase: 'left-[52%] top-0 w-[40%]', retraso: 120 },
   { archivo: 'paltas', color: '#bfe39a', clase: 'left-[40%] top-[42%] w-[54%]', retraso: 240 },
-  { archivo: 'limones', color: '#fff1a6', clase: 'left-0 top-[52%] w-[38%]', retraso: 360 },
 ];
 
 const PASOS = [
@@ -89,6 +89,13 @@ export function Inicio() {
             </div>
 
             <div className="relative mx-auto aspect-square w-full max-w-[30rem]" aria-hidden="true">
+              {/* El sello de Rey Toro, como un timbre entre la fruta */}
+              <div
+                className="burbuja absolute top-[54%] left-0 w-[38%] -rotate-[10deg] rounded-full shadow-[0_14px_30px_rgb(17_17_17/0.25)] ring-[6px] ring-papel"
+                style={{ animationDelay: '360ms' }}
+              >
+                <Logo size={200} className="h-auto w-full" />
+              </div>
               {BURBUJAS.map((b) => (
                 <div
                   key={b.archivo}
@@ -113,7 +120,7 @@ export function Inicio() {
       {/* Categorías: cada una con su color, como los cajones de la feria */}
       {categorias.length > 0 && (
         <section className="contenedor pt-6" aria-label="Categorías">
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7 [&>li:last-child:nth-child(odd)]:col-span-2 sm:[&>li:last-child:nth-child(odd)]:col-span-1">
             <li>
               <Link
                 to="/pedido?ver=ofertas"
