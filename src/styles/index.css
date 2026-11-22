@@ -18,7 +18,7 @@
   --color-papel: #ffffff;
   --color-naranjo: #ff8a2a;
   --color-naranjo-claro: #ffa257;
-  --color-naranjo-texto: #b45309;
+  --color-naranjo-texto: #9a4507;
   --color-linea: #dfe8db;
 
   --color-frutas: #ffb547;
@@ -173,7 +173,8 @@ body {
     width: 100%;
     min-height: 3.4rem;
     padding: 0.75rem 1.1rem;
-    border: 2px solid var(--color-linea);
+    /* borde oscuro (3,7:1) para que el campo se vea bien, también con poca vista */
+    border: 2px solid #768a78;
     border-radius: 1rem;
     background: var(--color-papel);
     font-size: 1.05rem;
@@ -214,32 +215,10 @@ body {
   }
 }
 
-/* Aviso en movimiento: 6 copias, se desplaza la mitad para que no se note el corte */
-.aviso-pista {
-  animation: aviso-correr 40s linear infinite;
-}
-@keyframes aviso-correr {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .aviso-pista {
-    animation: none;
-    width: auto;
-    justify-content: center;
-  }
-  .aviso-pista span:not(:first-child) {
-    display: none;
-  }
-}
-
-/* Botón de WhatsApp de la pantalla final: un latido suave para llamar la atención */
+/* Botón de WhatsApp de la pantalla final: late 3 veces para llamar la atención y se detiene
+   (algo que se mueve sin parar distrae y no se puede pausar) */
 .latido {
-  animation: latido 1.7s ease-in-out infinite;
+  animation: latido 1.7s ease-in-out 3;
 }
 @keyframes latido {
   0%,

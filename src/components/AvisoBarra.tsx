@@ -2,8 +2,9 @@ import { useLocation } from 'react-router';
 import { useCatalogo } from '../state/catalogo';
 
 /**
- * Aviso que pasa en movimiento bajo el menú. El texto se cambia en la hoja "Configuración".
+ * Aviso fijo bajo el menú. El texto se cambia en la hoja "Configuración".
  * Es un aviso del delivery: no se muestra en las páginas de arriendo.
+ * Va quieto (no en movimiento): se lee mejor y cumple WCAG 2.2.2, que pide poder pausar lo que se mueve.
  */
 export function AvisoBarra() {
   const { estado } = useCatalogo();
@@ -12,15 +13,8 @@ export function AvisoBarra() {
   const esDelivery = pathname === '/' || pathname.startsWith('/pedido');
   if (!texto || !esDelivery) return null;
   return (
-    <div className="overflow-hidden bg-hoja py-2.5 font-bold text-papel" role="note">
-      <span className="sr-only">{texto}</span>
-      <div className="aviso-pista flex w-max whitespace-nowrap" aria-hidden="true">
-        {Array.from({ length: 6 }, (_, i) => (
-          <span key={i} className="pr-20">
-            {texto}
-          </span>
-        ))}
-      </div>
-    </div>
+    <section aria-label="Aviso" className="bg-hoja px-4 py-2.5 text-center font-bold text-papel">
+      {texto}
+    </section>
   );
 }

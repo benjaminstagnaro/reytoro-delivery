@@ -15,9 +15,17 @@ export function Galeria({ fotos }: { fotos: FotoArriendo[] }) {
   const miniaturas = abajo.length > 8 ? abajo.slice(0, 7) : abajo;
   const ocultas = abajo.length > 8 ? abajo.slice(7) : [];
 
+  // Al cerrar el visor, el foco vuelve a la foto que se abrió (si no, quien usa teclado vuelve al inicio de la página)
+  const origen = useRef<HTMLElement | null>(null);
   const abrir = (f: FotoArriendo) => {
     const i = reales.indexOf(f);
-    if (i >= 0) setAbierta(i);
+    if (i < 0) return;
+    origen.current = document.activeElement as HTMLElement | null;
+    setAbierta(i);
+  };
+  const cerrar = () => {
+    setAbierta(null);
+    requestAnimationFrame(() => origen.current?.focus());
   };
 
   // llenar = la foto no empuja la altura de la celda (la grande toma el alto de las dos de al lado, aunque sea vertical)
@@ -70,7 +78,7 @@ export function Galeria({ fotos }: { fotos: FotoArriendo[] }) {
         </div>
       )}
       {reales.length > 0 && <p className="mt-3 text-hoja-suave">{reales.length} fotos. Toca una para verla en grande.</p>}
-      {abierta !== null && <Visor fotos={reales} inicio={abierta} onCerrar={() => setAbierta(null)} />}
+      {abierta !== null && <Visor fotos={reales} inicio={abierta} onCerrar={cerrar} />}
     </>
   );
 }

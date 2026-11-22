@@ -93,7 +93,7 @@ function PaginaArriendo({ arriendo, conFechas, emoji }: { arriendo: Arriendo; co
           {arriendo.ubicacion && <Mapa {...arriendo.ubicacion} />}
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <div className="lg:sticky lg:top-24 lg:self-start">
           {arriendo.reserva ? (
             <Reserva arriendo={arriendo} whatsapp={whatsapp} />
           ) : arriendo.precio ? (
@@ -101,7 +101,7 @@ function PaginaArriendo({ arriendo, conFechas, emoji }: { arriendo: Arriendo; co
           ) : (
             <Consulta arriendo={arriendo} conFechas={conFechas} whatsapp={whatsapp} />
           )}
-        </aside>
+        </div>
       </section>
     </>
   );

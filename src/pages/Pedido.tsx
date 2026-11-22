@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { ConCatalogo } from '../components/Estado';
 import { FilaProducto } from '../components/FilaProducto';
@@ -200,8 +200,24 @@ function BarraPedido({ resumen, minimo }: { resumen: NonNullable<ReturnType<type
     : minimo > 0 && resumen.falta > 0
       ? `Te faltan ${clp(resumen.falta)} para despacho gratis`
       : '¡Tu despacho es gratis!';
+  // Que la barra nunca tape lo que tiene el foco: el navegador deja libre abajo justo su alto (cambia con el tamaño de letra)
+  const barra = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = barra.current;
+    if (!el) return;
+    const raiz = document.documentElement;
+    const ajustar = () => raiz.style.setProperty('scroll-padding-bottom', `${el.offsetHeight + 16}px`);
+    ajustar();
+    const ro = new ResizeObserver(ajustar);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      raiz.style.removeProperty('scroll-padding-bottom');
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] md:px-6">
+    <div ref={barra} className="fixed inset-x-0 bottom-0 z-40 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] md:px-6">
       <div className="mx-auto max-w-[76rem] rounded-[1.75rem] bg-hoja px-5 py-3.5 text-papel shadow-[0_-6px_30px_rgb(22_48_31/0.25)]">
         <div className="flex items-center gap-4">
           <p className="titulo-sm min-w-0 flex-1 text-[1.6rem] leading-none sm:text-[1.9rem]" aria-live="polite">

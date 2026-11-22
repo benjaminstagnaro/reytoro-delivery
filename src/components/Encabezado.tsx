@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router';
 import { Logo } from './Logo';
 import { useCarrito } from '../state/carrito';
@@ -16,11 +16,24 @@ export function Encabezado() {
   const { resumen } = useCarrito();
   const { tamano, siguiente } = useTamanoTexto();
   const [abierto, setAbierto] = useState(false);
+  const botonMenu = useRef<HTMLButtonElement>(null);
   const [conSombra, setConSombra] = useState(false);
   const { pathname } = useLocation();
   const n = resumen?.productos ?? 0;
 
   useEffect(() => setAbierto(false), [pathname]);
+  // Con el menú abierto, Escape lo cierra y devuelve el foco al botón
+  useEffect(() => {
+    if (!abierto) return;
+    const f = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setAbierto(false);
+        botonMenu.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', f);
+    return () => window.removeEventListener('keydown', f);
+  }, [abierto]);
   useEffect(() => {
     const f = () => setConSombra(window.scrollY > 8);
     f();
@@ -82,6 +95,7 @@ export function Encabezado() {
             {n > 0 && <span className="grid min-w-7 place-items-center rounded-full bg-naranjo px-1.5 text-sm text-hoja">{n}</span>}
           </Link>
           <button
+            ref={botonMenu}
             type="button"
             className="grid size-12 place-items-center rounded-full bg-menta lg:hidden"
             aria-expanded={abierto}
