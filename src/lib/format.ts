@@ -2,7 +2,12 @@ import type { Producto } from './types';
 
 /** 5990 -> "$5.990" */
 export function clp(n: number): string {
-  return '$' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return (
+    '$' +
+    Math.round(n)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  );
 }
 
 /** Clave única de un producto (nombre + medida), igual que en Apps Script. */
@@ -18,7 +23,10 @@ export function nombreLindo(nombre: string): string {
 
 /** Quita "OFERTA" del nombre cuando ya se muestra la etiqueta de oferta. */
 export function nombreSinOferta(nombre: string): string {
-  return nombre.replace(/\s*\b(super\s+)?oferta\b/gi, '').replace(/\s+/g, ' ').trim();
+  return nombre
+    .replace(/\s*\b(super\s+)?oferta\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 const UNIDADES: Record<string, string> = {
@@ -60,4 +68,22 @@ export function esPrecioPorUnidad(medida: string): boolean {
 /** Texto para comparar en el buscador: sin mayúsculas ni tildes. */
 export function normalizar(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+/** ['A', 'B', 'C'] → "A, B y C" */
+export function listaBonita(xs: string[]): string {
+  return xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} y ${xs[xs.length - 1]}`;
+}
+
+/** true si la fecha "AAAA-MM-DD" cae sábado o domingo */
+export function esFinDeSemana(fecha: string): boolean {
+  const f = fecha.split('-').map(Number);
+  if (f.length !== 3 || f.some((x) => !x)) return false;
+  const d = new Date(f[0], f[1] - 1, f[2]).getDay();
+  return d === 0 || d === 6;
+}
+
+/** ¿Se despacha solo de lunes a viernes? (según el texto de Configuración) */
+export function soloDiasHabiles(dias?: string): boolean {
+  return /lunes a viernes/i.test(dias ?? '');
 }

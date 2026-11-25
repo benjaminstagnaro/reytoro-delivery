@@ -5,7 +5,7 @@ import { Ilustracion, colorCategoria, ilustracionCategoria } from '../components
 import { rutas } from '../lib/fotosProductos';
 import { useCatalogo } from '../state/catalogo';
 import { useTitulo } from '../lib/useTitulo';
-import { clp } from '../lib/format';
+import { clp, listaBonita } from '../lib/format';
 import { casaPlaya, foodTruck } from '../content/arriendos';
 import { Foto } from '../components/Foto';
 import { Logo } from '../components/Logo';
@@ -82,10 +82,18 @@ export function Inicio() {
                     <Check /> Despacho gratis desde {clp(catalogo.config.minimo)}
                   </li>
                 )}
+                {catalogo?.config.diasDespacho && (
+                  <li className="flex items-center gap-2">
+                    <Check /> Despachos de {catalogo.config.diasDespacho.toLowerCase()}
+                  </li>
+                )}
                 <li className="flex items-center gap-2">
                   <Check /> Pagas al recibir
                 </li>
               </ul>
+              {catalogo?.config.comunas?.length ? (
+                <p className="mt-3 max-w-xl text-hoja-suave">Repartimos en {listaBonita(catalogo.config.comunas)}.</p>
+              ) : null}
             </div>
 
             <div className="relative mx-auto aspect-square w-full max-w-[30rem]" aria-hidden="true">

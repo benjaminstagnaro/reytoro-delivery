@@ -6,7 +6,7 @@ import { Ilustracion } from '../components/Ilustracion';
 import { ImagenProducto } from '../components/ImagenProducto';
 import { useCarrito } from '../state/carrito';
 import { useTitulo } from '../lib/useTitulo';
-import { claveProducto, clp, medidaLinda, nombreLindo } from '../lib/format';
+import { claveProducto, clp, esFinDeSemana, listaBonita, medidaLinda, nombreLindo, soloDiasHabiles } from '../lib/format';
 import { enviarPedido, MODO_DEMO } from '../lib/api';
 import type { Catalogo, DatosCliente } from '../lib/types';
 
@@ -15,7 +15,7 @@ export function TuPedido() {
   return <ConCatalogo>{(c) => <Formulario catalogo={c} />}</ConCatalogo>;
 }
 
-type Errores = Partial<Record<'nombre' | 'telefono' | 'direccion', string>>;
+type Errores = Partial<Record<'nombre' | 'telefono' | 'comuna' | 'direccion' | 'entrega', string>>;
 
 function Formulario({ catalogo }: { catalogo: Catalogo }) {
   const { carrito, resumen, cambiar, cliente, setCliente, vaciar, recordarPedido } = useCarrito();
@@ -28,6 +28,8 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
   const resumenErrores = useRef<HTMLDivElement>(null);
 
   const lineas = catalogo.productos.filter((p) => (carrito[claveProducto(p)] ?? 0) > 0);
+  const comunas = catalogo.config.comunas ?? [];
+  const soloSemana = soloDiasHabiles(catalogo.config.diasDespacho);
 
   if (!resumen || lineas.length === 0) {
     return (
@@ -58,7 +60,9 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
     const er: Errores = {};
     if (!datos.nombre.trim()) er.nombre = 'Escribe tu nombre.';
     if (datos.telefono.replace(/\D/g, '').length < 8) er.telefono = 'Escribe tu teléfono (al menos 8 números).';
+    if (comunas.length && !comunas.includes(datos.comuna)) er.comuna = 'Elige tu comuna.';
     if (!datos.direccion.trim()) er.direccion = 'Escribe la dirección donde te llevamos el pedido.';
+    if (soloSemana && esFinDeSemana(datos.entrega)) er.entrega = 'Despachamos de lunes a viernes: elige otro día o deja la fecha vacía.';
     setErrores(er);
     if (Object.keys(er).length) {
       requestAnimationFrame(() => resumenErrores.current?.focus());
@@ -192,7 +196,34 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
               aria-describedby={errores.telefono ? 'telefono-error' : undefined}
             />
           </Campo>
-          <Campo etiqueta="Dirección" error={errores.direccion} id="direccion" ayuda="Calle, número, depto y comuna">
+          {comunas.length > 0 && (
+            <Campo
+              etiqueta="Comuna"
+              error={errores.comuna}
+              id="comuna"
+              ayuda={`Despachamos en ${listaBonita(comunas)}. ¿Vives en otra? Escríbenos por WhatsApp antes de pedir.`}
+            >
+              <select
+                {...campo('comuna')}
+                className="campo"
+                aria-invalid={!!errores.comuna}
+                aria-describedby={`comuna-ayuda${errores.comuna ? ' comuna-error' : ''}`}
+              >
+                <option value="">Elige tu comuna…</option>
+                {comunas.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </Campo>
+          )}
+          <Campo
+            etiqueta="Dirección"
+            error={errores.direccion}
+            id="direccion"
+            ayuda={comunas.length ? 'Calle, número y depto' : 'Calle, número, depto y comuna'}
+          >
             <input
               {...campo('direccion')}
               className="campo"
@@ -201,8 +232,21 @@ function Formulario({ catalogo }: { catalogo: Catalogo }) {
               aria-describedby={`direccion-ayuda${errores.direccion ? ' direccion-error' : ''}`}
             />
           </Campo>
-          <Campo etiqueta="Fecha de entrega" opcional id="entrega">
-            <input {...campo('entrega')} className="campo" type="date" min={hoy.toISOString().slice(0, 10)} />
+          <Campo
+            etiqueta="Fecha de entrega"
+            opcional
+            id="entrega"
+            error={errores.entrega}
+            ayuda={soloSemana ? 'Despachamos de lunes a viernes' : undefined}
+          >
+            <input
+              {...campo('entrega')}
+              className="campo"
+              type="date"
+              min={hoy.toISOString().slice(0, 10)}
+              aria-invalid={!!errores.entrega}
+              aria-describedby={[soloSemana && 'entrega-ayuda', errores.entrega && 'entrega-error'].filter(Boolean).join(' ') || undefined}
+            />
           </Campo>
           <Campo etiqueta="Comentarios" opcional id="comentarios">
             <textarea

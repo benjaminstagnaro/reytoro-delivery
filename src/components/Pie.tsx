@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { Logo, Toro } from './Logo';
 import { useCatalogo } from '../state/catalogo';
-import { clp } from '../lib/format';
+import { clp, listaBonita } from '../lib/format';
 import { linkWhatsApp } from '../lib/whatsapp';
 
 export function Pie() {
@@ -29,6 +29,8 @@ export function Pie() {
             <h2 className="titulo-sm text-[1.25rem] text-naranjo-claro">Delivery</h2>
             <ul className="mt-4 space-y-2.5 text-white/85">
               {cfg && cfg.minimo > 0 && <li>Despacho gratis desde {clp(cfg.minimo)}</li>}
+              {cfg?.diasDespacho && <li>Despachos de {cfg.diasDespacho.toLowerCase()}</li>}
+              {cfg?.comunas?.length ? <li>En {listaBonita(cfg.comunas)}</li> : null}
               <li>Pagas al recibir, por transferencia</li>
               <li>
                 <Link to="/pedido" className="font-bold text-papel underline underline-offset-4">

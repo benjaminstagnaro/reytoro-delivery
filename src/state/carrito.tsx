@@ -24,7 +24,7 @@ function guardar(clave: string, valor: unknown) {
   }
 }
 
-export const CLIENTE_VACIO: DatosCliente = { nombre: '', telefono: '', direccion: '', entrega: '', comentarios: '' };
+export const CLIENTE_VACIO: DatosCliente = { nombre: '', telefono: '', comuna: '', direccion: '', entrega: '', comentarios: '' };
 
 interface CarritoCtx {
   carrito: Carrito;
@@ -85,7 +85,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
     setCliente: (c) => {
       setClienteState(c);
       // Se recuerdan solo nombre, teléfono y dirección para el próximo pedido.
-      guardar(CLAVE_CLIENTE, { nombre: c.nombre, telefono: c.telefono, direccion: c.direccion });
+      guardar(CLAVE_CLIENTE, { nombre: c.nombre, telefono: c.telefono, comuna: c.comuna, direccion: c.direccion });
     },
     olvidarDatos: () => {
       for (const k of [CLAVE_CLIENTE, CLAVE_ULTIMO, CLAVE_CARRITO]) {

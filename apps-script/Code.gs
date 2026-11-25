@@ -14,6 +14,10 @@ const FILA_BARRA_ = 'Mensaje de la barra de avisos';
 const BARRA_POR_DEFECTO_ = '🕘 Pedidos después de las 9 PM se entregan pasado mañana';
 const FILA_CATEGORIAS_ = 'Categorías de la página (en orden, con emoji)';
 const CATEGORIAS_POR_DEFECTO_ = '🍎 Frutas, 🥬 Verduras, 🥩 Carnes, 🥚 Huevos, 🧊 Congelados, 🧺 Otros';
+const FILA_DIAS_ = 'Días de despacho';
+const DIAS_POR_DEFECTO_ = 'Lunes a viernes';
+const FILA_COMUNAS_ = 'Comunas de despacho (separadas por coma)';
+const COMUNAS_POR_DEFECTO_ = 'Ñuñoa, La Reina, Providencia, Las Condes, Peñalolén';
 
 /* ---------------- Página y API ---------------- */
 
@@ -99,7 +103,11 @@ function obtenerConfig_() {
     callmebot: txt('WhatsApp automático: clave CallMeBot (opcional)'),
     // Si la fila no existe todavía se usa el texto por defecto; si existe pero está vacía, no se muestra la barra.
     barra: c.hasOwnProperty(FILA_BARRA_) ? String(c[FILA_BARRA_]).trim() : BARRA_POR_DEFECTO_,
-    categorias: leerCategorias_(String(c[FILA_CATEGORIAS_] || '').trim() || CATEGORIAS_POR_DEFECTO_)
+    categorias: leerCategorias_(String(c[FILA_CATEGORIAS_] || '').trim() || CATEGORIAS_POR_DEFECTO_),
+    diasDespacho: txt(FILA_DIAS_, DIAS_POR_DEFECTO_),
+    // Si la fila está vacía, no se pide comuna (se reparte a todas)
+    comunas: (c.hasOwnProperty(FILA_COMUNAS_) ? String(c[FILA_COMUNAS_]) : COMUNAS_POR_DEFECTO_)
+      .split(',').map(function (x) { return x.trim(); }).filter(Boolean)
   };
 }
 
@@ -160,11 +168,30 @@ function guardarPedido(pedido) {
 
   const nombre = limpiar_(pedido.nombre, 80);
   const telefono = limpiar_(pedido.telefono, 30);
-  const direccion = limpiar_(pedido.direccion, 200);
+  let direccion = limpiar_(pedido.direccion, 200);
   const comentarios = limpiar_(pedido.comentarios, 500);
   const entrega = fechaTexto_(pedido.entrega);
   if (!nombre || !telefono || !direccion) {
     throw new Error('Faltan datos: escribe tu nombre, teléfono y dirección.');
+  }
+
+  // Comuna: debe ser una de las de Configuración. Se agrega al final de la dirección.
+  // (Si el pedido no trae comuna, por ejemplo desde una versión antigua de la página, se acepta igual.)
+  const comuna = limpiar_(pedido.comuna, 60);
+  if (comuna) {
+    const valida = cfg.comunas.filter(function (x) { return sinTildes_(x) === sinTildes_(comuna); })[0];
+    if (cfg.comunas.length && !valida) {
+      throw new Error('Por ahora solo despachamos en ' + listaBonita_(cfg.comunas) + '.');
+    }
+    const nombreComuna = valida || comuna;
+    if (sinTildes_(direccion).indexOf(sinTildes_(nombreComuna)) < 0) direccion = direccion + ', ' + nombreComuna;
+  }
+
+  // Si se despacha de lunes a viernes, la fecha elegida no puede caer en fin de semana.
+  if (entrega && /lunes a viernes/i.test(cfg.diasDespacho)) {
+    const f = String(pedido.entrega).split('-').map(Number);
+    const dia = new Date(f[0], f[1] - 1, f[2]).getDay();
+    if (dia === 0 || dia === 6) throw new Error('Despachamos de lunes a viernes. Elige otro día de entrega.');
   }
 
   // Los precios se toman SIEMPRE de la planilla, no de lo que manda la página.
@@ -403,7 +430,9 @@ function asegurarConfig_() {
   [['Correo que recibe el aviso de cada pedido', '', 'Si queda vacío, el aviso llega al correo dueño de esta planilla.'],
    ['WhatsApp automático: clave CallMeBot (opcional)', '', 'Opcional. Si la llenas, cada pedido también llega por WhatsApp automático.'],
    [FILA_BARRA_, BARRA_POR_DEFECTO_, 'Texto que se mueve arriba en la página. Si lo borras, la barra desaparece.'],
-   [FILA_CATEGORIAS_, CATEGORIAS_POR_DEFECTO_, 'Secciones de la página, en el orden en que aparecen. Formato: emoji + nombre, separadas por coma.']]
+   [FILA_CATEGORIAS_, CATEGORIAS_POR_DEFECTO_, 'Secciones de la página, en el orden en que aparecen. Formato: emoji + nombre, separadas por coma.'],
+   [FILA_DIAS_, DIAS_POR_DEFECTO_, 'Se muestra en la página. Si dice "lunes a viernes", no se puede elegir sábado ni domingo como fecha de entrega.'],
+   [FILA_COMUNAS_, COMUNAS_POR_DEFECTO_, 'El cliente elige su comuna de esta lista. Si la dejas vacía, no se pide comuna.']]
     .forEach(function (f) {
       if (!tiene[f[0]]) cf.getRange(cf.getLastRow() + 1, 1, 1, 3).setValues([f]);
     });
@@ -852,6 +881,11 @@ function aNumero_(v) {
 
 function clp_(n) {
   return '$' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+// ['A', 'B', 'C'] -> "A, B y C"
+function listaBonita_(xs) {
+  return xs.length < 2 ? xs.join('') : xs.slice(0, -1).join(', ') + ' y ' + xs[xs.length - 1];
 }
 
 function limpiar_(v, max) {

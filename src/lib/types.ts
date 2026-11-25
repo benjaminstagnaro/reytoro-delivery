@@ -33,6 +33,10 @@ export interface Config {
   web: string;
   barra: string;
   categorias: Categoria[];
+  /** Ej: "Lunes a viernes". Si dice "lunes a viernes", no se aceptan fechas de fin de semana. */
+  diasDespacho?: string;
+  /** Comunas donde se despacha. Vacía = no se pide comuna. */
+  comunas?: string[];
 }
 
 export interface Catalogo {
@@ -43,6 +47,7 @@ export interface Catalogo {
 export interface DatosCliente {
   nombre: string;
   telefono: string;
+  comuna: string;
   direccion: string;
   /** AAAA-MM-DD o vacío */
   entrega: string;

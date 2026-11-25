@@ -36,6 +36,8 @@
   header.top p { margin: 3px 0 0; color: #d9d2c5; font-size: 14px; }
   .free { display: inline-block; margin-top: 6px; background: var(--orange); color: #fff;
     font-size: 12.5px; font-weight: 700; padding: 3px 9px; border-radius: 99px; }
+  header.top p.zona { margin-top: 7px; color: #fff; font-size: 13.5px; line-height: 1.35; }
+  header.top p.zona b { color: #ffd27a; }
 
   /* Barra de avisos que se mueve */
   .ticker { background: var(--orange); color: #fff; overflow: hidden; white-space: nowrap; font-weight: 800;
@@ -128,8 +130,10 @@
   .note.ok { color: var(--green); }
   label { display: block; font-size: 13.5px; font-weight: 700; margin: 10px 0 4px; }
   label .opt { color: var(--muted); font-weight: 500; }
-  input.f, textarea.f { width: 100%; padding: 12px; border: 1.5px solid var(--line); border-radius: 10px;
-    font-size: 16px; background: #fffdf9; font-family: inherit; }
+  input.f, textarea.f, select.f { width: 100%; padding: 12px; border: 1.5px solid var(--line); border-radius: 10px;
+    font-size: 16px; background: #fffdf9; font-family: inherit; color: inherit; }
+  select.f.err { border-color: #d33; background: #fff5f5; }
+  .ayuda { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
   input.f:focus, textarea.f:focus { outline: none; border-color: var(--orange); }
   input.f.err { border-color: #d33; background: #fff5f5; }
   .error { background: #fde8e8; color: #9b1c1c; border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 10px 0; display: none; }
@@ -176,6 +180,7 @@
       <h1 id="negocio">Rey Toro Delivery</h1>
       <p id="bienvenida"></p>
       <span class="free" id="freeBadge"></span>
+      <p class="zona" id="zona" hidden></p>
     </div>
   </div>
 </header>
@@ -216,9 +221,14 @@
       <input class="f" id="nombre" autocomplete="name">
       <label for="telefono">Teléfono / WhatsApp</label>
       <input class="f" id="telefono" type="tel" inputmode="tel" autocomplete="tel" placeholder="+56 9 …">
+      <div id="bloqueComuna" hidden>
+        <label for="comuna">Comuna</label>
+        <select class="f" id="comuna"><option value="">Elige tu comuna…</option></select>
+        <p class="ayuda" id="ayudaComuna"></p>
+      </div>
       <label for="direccion">Dirección de entrega</label>
-      <input class="f" id="direccion" autocomplete="street-address" placeholder="Calle, número, depto, comuna">
-      <label for="entrega">Fecha de entrega <span class="opt">(opcional)</span></label>
+      <input class="f" id="direccion" autocomplete="street-address" placeholder="Calle, número, depto">
+      <label for="entrega">Fecha de entrega <span class="opt" id="optEntrega">(opcional)</span></label>
       <input class="f" id="entrega" type="date">
       <label for="comentarios">Comentarios <span class="opt">(opcional)</span></label>
       <textarea class="f" id="comentarios" rows="2" placeholder="Ej: paltas para el fin de semana, tocar timbre…"></textarea>
@@ -287,6 +297,23 @@ const DATOS = <?!= datos ?>;
     $('ticker').hidden = false;
   }
   $('freeBadge').textContent = C.minimo > 0 ? 'Despacho gratis desde ' + clp(C.minimo) : 'Despacho a domicilio';
+
+  // Días y comunas de despacho (se cambian en la hoja Configuración)
+  const COMUNAS = C.comunas || [];
+  const SOLO_SEMANA = /lunes a viernes/i.test(C.diasDespacho || '');
+  const listaBonita = (xs) => xs.length < 2 ? xs.join('') : xs.slice(0, -1).join(', ') + ' y ' + xs[xs.length - 1];
+  if (C.diasDespacho || COMUNAS.length) {
+    $('zona').innerHTML = '🚚 ' + (C.diasDespacho ? '<b>Despachos de ' + esc(C.diasDespacho.toLowerCase()) + '</b>' : 'Despachos') +
+      (COMUNAS.length ? ' en ' + esc(listaBonita(COMUNAS)) : '');
+    $('zona').hidden = false;
+  }
+  if (COMUNAS.length) {
+    COMUNAS.forEach((c) => { const o = document.createElement('option'); o.value = c; o.textContent = c; $('comuna').appendChild(o); });
+    $('ayudaComuna').textContent = '¿Vives en otra comuna? Escríbenos por WhatsApp antes de pedir.';
+    $('bloqueComuna').hidden = false;
+  }
+  if (SOLO_SEMANA) $('optEntrega').textContent = '(opcional, de lunes a viernes)';
+  const esFinDeSemana = (v) => { const f = String(v || '').split('-').map(Number); if (f.length !== 3) return false; const d = new Date(f[0], f[1] - 1, f[2]).getDay(); return d === 0 || d === 6; };
 
   // Categorías en el orden en que aparecen en la planilla
   // Secciones: primero las de Configuración (en ese orden), después cualquier otra que aparezca en Productos.
@@ -400,11 +427,12 @@ const DATOS = <?!= datos ?>;
   });
 
   // Checkout
-  const campos = ['nombre', 'telefono', 'direccion', 'entrega', 'comentarios'];
+  const campos = ['nombre', 'telefono', 'comuna', 'direccion', 'entrega', 'comentarios'];
   const DATOS_CLIENTE = 'reytoro-cliente-v1';
   try {
     const d = JSON.parse(localStorage.getItem(DATOS_CLIENTE) || '{}');
     ['nombre', 'telefono', 'direccion'].forEach((c) => { if (d[c]) $(c).value = d[c]; });
+    if (d.comuna && COMUNAS.indexOf(d.comuna) >= 0) $('comuna').value = d.comuna;
   } catch (e) {}
   const hoy = new Date(); hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
   $('entrega').min = hoy.toISOString().slice(0, 10);
@@ -451,16 +479,32 @@ const DATOS = <?!= datos ?>;
 
   function mostrarError(t) { $('error').textContent = t; $('error').style.display = 'block'; }
 
+  $('comuna').addEventListener('change', () => {
+    if ($('comuna').value) $('comuna').classList.remove('err');
+    if (!document.querySelector('.f.err')) $('error').style.display = 'none';
+  });
+  $('entrega').addEventListener('change', () => {
+    if (SOLO_SEMANA && esFinDeSemana($('entrega').value)) {
+      $('entrega').classList.add('err');
+      mostrarError('Despachamos de lunes a viernes. Elige otro día, o deja la fecha vacía.');
+    } else {
+      $('entrega').classList.remove('err');
+      if (!document.querySelector('.f.err')) $('error').style.display = 'none';
+    }
+  });
+
   $('confirmar').addEventListener('click', () => {
     let falta = false;
     ['nombre', 'telefono', 'direccion'].forEach((c) => {
       const vacio = !$(c).value.trim(); $(c).classList.toggle('err', vacio); if (vacio) falta = true;
     });
     if (falta) { mostrarError('Completa tu nombre, teléfono y dirección.'); return; }
+    if (COMUNAS.length && !$('comuna').value) { $('comuna').classList.add('err'); mostrarError('Elige tu comuna.'); $('comuna').focus(); return; }
+    if (SOLO_SEMANA && esFinDeSemana($('entrega').value)) { $('entrega').classList.add('err'); mostrarError('Despachamos de lunes a viernes. Elige otro día, o deja la fecha vacía.'); return; }
     $('error').style.display = 'none';
     const pedido = { items: Object.keys(carro).map((k) => ({ n: porClave[k].n, m: porClave[k].m, q: carro[k] })) };
     campos.forEach((c) => { pedido[c] = $(c).value; });
-    try { localStorage.setItem(DATOS_CLIENTE, JSON.stringify({ nombre: pedido.nombre, telefono: pedido.telefono, direccion: pedido.direccion })); } catch (e) {}
+    try { localStorage.setItem(DATOS_CLIENTE, JSON.stringify({ nombre: pedido.nombre, telefono: pedido.telefono, direccion: pedido.direccion, comuna: pedido.comuna })); } catch (e) {}
     const btn = $('confirmar'); btn.disabled = true; btn.textContent = 'Enviando…';
     google.script.run
       .withSuccessHandler((res) => {

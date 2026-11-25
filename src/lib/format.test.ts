@@ -58,3 +58,14 @@ describe('carrito', () => {
     expect(conEnvio.total).toBe(4000);
   });
 });
+
+describe('despacho', () => {
+  it('lista bonita y fines de semana', async () => {
+    const { listaBonita, esFinDeSemana, soloDiasHabiles } = await import('./format');
+    expect(listaBonita(['Ñuñoa', 'La Reina', 'Providencia'])).toBe('Ñuñoa, La Reina y Providencia');
+    expect(esFinDeSemana('2026-11-28')).toBe(true);
+    expect(esFinDeSemana('2026-11-27')).toBe(false);
+    expect(esFinDeSemana('')).toBe(false);
+    expect(soloDiasHabiles('Lunes a viernes')).toBe(true);
+  });
+});
