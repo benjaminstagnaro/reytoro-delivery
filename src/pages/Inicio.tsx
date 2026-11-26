@@ -213,10 +213,22 @@ export function Inicio() {
 
       {/* Historia */}
       <section className="contenedor grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
-        <div className="relative grid aspect-[4/3] place-items-center overflow-hidden rounded-[2rem] bg-[#ffe9c9]" aria-hidden="true">
-          <Ilustracion nombre="canasta" className="w-1/2" />
-          <span className="titulo absolute top-6 left-7 text-[3.5rem] text-naranjo-texto">2:00</span>
-        </div>
+        <figure className="relative overflow-hidden rounded-[2rem] bg-[#ffe9c9]">
+          <img
+            src={`${import.meta.env.BASE_URL}fotos/vega/en-la-vega.webp`}
+            srcSet={`${import.meta.env.BASE_URL}fotos/vega/en-la-vega-640.webp 640w, ${import.meta.env.BASE_URL}fotos/vega/en-la-vega.webp 1280w`}
+            sizes="(min-width: 768px) 50vw, 100vw"
+            width={1280}
+            height={960}
+            loading="lazy"
+            decoding="async"
+            alt="Nuestro dueño en La Vega Central de madrugada, frente a un puesto de verduras"
+            className="block aspect-[4/3] h-auto w-full object-cover"
+          />
+          <figcaption className="absolute top-4 left-4 rounded-full bg-hoja/85 px-4 py-1.5 font-bold text-papel">
+            La Vega Central, de madrugada
+          </figcaption>
+        </figure>
         <div>
           <h2 className="titulo text-[2.3rem] sm:text-[3rem]">Mientras duermes, estamos en La Vega</h2>
           <p className="mt-5 max-w-xl text-[1.2rem] text-hoja-suave">
