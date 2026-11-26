@@ -213,22 +213,34 @@ export function Inicio() {
 
       {/* Historia */}
       <section className="contenedor grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
-        <figure className="relative overflow-hidden rounded-[2rem] bg-[#ffe9c9]">
+        {/* Foto grande del puesto y, encima, la selfie de la madrugada como una foto pegada */}
+        <div className="relative pb-10 sm:pb-14">
+          <figure className="overflow-hidden rounded-[2rem] bg-[#ffe9c9]">
+            <img
+              src={`${import.meta.env.BASE_URL}fotos/vega/puesto.webp`}
+              srcSet={`${import.meta.env.BASE_URL}fotos/vega/puesto-480.webp 480w, ${import.meta.env.BASE_URL}fotos/vega/puesto.webp 740w`}
+              sizes="(min-width: 768px) 50vw, 100vw"
+              width={740}
+              height={555}
+              loading="lazy"
+              decoding="async"
+              alt="Nuestro dueño en La Vega Central, junto a canastos de tomates, zanahorias y espinaca"
+              className="block aspect-[4/3] h-auto w-full object-cover"
+            />
+            <figcaption className="absolute top-3 left-3 rounded-full bg-hoja/85 px-3 py-1 text-sm font-bold text-papel sm:top-4 sm:left-4 sm:px-4 sm:py-1.5 sm:text-base">
+              La Vega Central, de madrugada
+            </figcaption>
+          </figure>
           <img
-            src={`${import.meta.env.BASE_URL}fotos/vega/en-la-vega.webp`}
-            srcSet={`${import.meta.env.BASE_URL}fotos/vega/en-la-vega-640.webp 640w, ${import.meta.env.BASE_URL}fotos/vega/en-la-vega.webp 1280w`}
-            sizes="(min-width: 768px) 50vw, 100vw"
-            width={1280}
-            height={960}
+            src={`${import.meta.env.BASE_URL}fotos/vega/en-la-vega-640.webp`}
+            width={640}
+            height={480}
             loading="lazy"
             decoding="async"
-            alt="Nuestro dueño en La Vega Central de madrugada, frente a un puesto de verduras"
-            className="block aspect-[4/3] h-auto w-full object-cover"
+            alt="Selfie del dueño en un puesto de verduras de La Vega, de noche"
+            className="absolute right-3 bottom-0 w-[46%] rotate-3 rounded-2xl border-[6px] border-papel shadow-[0_14px_30px_rgb(22_48_31/0.3)] sm:right-[-0.5rem]"
           />
-          <figcaption className="absolute top-4 left-4 rounded-full bg-hoja/85 px-4 py-1.5 font-bold text-papel">
-            La Vega Central, de madrugada
-          </figcaption>
-        </figure>
+        </div>
         <div>
           <h2 className="titulo text-[2.3rem] sm:text-[3rem]">Mientras duermes, estamos en La Vega</h2>
           <p className="mt-5 max-w-xl text-[1.2rem] text-hoja-suave">
